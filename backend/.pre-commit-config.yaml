@@ -1,0 +1,16 @@
+repos:
+  - repo: local
+    hooks:
+    -   id: pylint
+        name: pylint
+        language: system
+        entry: pylint backend
+        types: [python]
+        args:
+        -  --init-hook='import sys; sys.path.append(".")'
+        -  --disable=C0111 # docstrings
+        -  --disable=C0330 # compatible with black
+        -  --disable=C0326 # compatible with black
+        -  --disable=C0411 # wrong-order-import
+        -  --disable=R0903 # too-few-public-methods
+        -  --disable=E0401 # import error

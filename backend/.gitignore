@@ -1,0 +1,8 @@
+.env
+.env-dev
+__pycache__
+.vscode
+tests/
+.history
+.idea
+venv
