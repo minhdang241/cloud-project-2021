@@ -1,0 +1,63 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "prettier", "react-hooks"],
+  "rules": {
+    "react/react-in-jsx-scope": 0,
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "no-console": 1,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "react/prop-types": "off",
+    "semi": ["error", "always"],
+    "quotes": "off",
+    "@typescript-eslint/quotes": [
+      "off",
+      "double",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
+    "no-trailing-spaces": [
+      "error",
+      {
+        "skipBlankLines": true,
+        "ignoreComments": true
+      }
+    ],
+    "camelcase": [
+      "error",
+      {
+        "ignoreImports": true
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    },
+    "react": {
+      "version": "detect"
+    }
+  }
+}
