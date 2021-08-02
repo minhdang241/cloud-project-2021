@@ -9,7 +9,7 @@
 from .crud_base import CRUDBase
 
 # Import CRUD object in file if need to customize crud_base
-from .crud_sample import CRUDSample
+from .crud_sample import sample
 
 # Or inherit CRUDBase here
 # resource = CRUDBase[RequestResource, ResourceCreate, ResourceUpdate](RequestResource)
