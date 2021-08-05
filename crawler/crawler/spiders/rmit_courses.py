@@ -23,7 +23,8 @@ class QuotesSpider(scrapy.Spider):
                 current_url = selector.css("a::attr(href)").get()
             if (idx - 2) % 4 == 0: # third colum is course code
                 course["code"] = selector.css("::text").extract_first()
-                yield scrapy.Request(current_url, callback=self.parse_detail, cb_kwargs={"course": course})
+                if current_url:
+                    yield scrapy.Request(current_url, callback=self.parse_detail, cb_kwargs={"course": course})
     
     def parse_detail(self, response, **kwargs):
         course = kwargs.get("course")
@@ -53,6 +54,14 @@ class QuotesSpider(scrapy.Spider):
                     return             
             elif inserting_info:
                 for text in texts:
-                    course[essential_info.get(inserting_info)] += (text + " ")
+                    text = text.strip()
+                    if len(text) > 1:
+                        course[essential_info.get(inserting_info)] += text.strip()
+                        try:
+                            if course[essential_info.get(inserting_info)][-1] not in string.punctuation:
+                                course[essential_info.get(inserting_info)] += "."
+                        except IndexError:
+                            pass
+                        course[essential_info.get(inserting_info)] += " "
 
             
