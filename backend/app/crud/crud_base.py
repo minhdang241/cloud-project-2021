@@ -32,15 +32,27 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return obj
 
     def get_by_fields(
-            self, db: Session, get_all=False, order_asc=True, **kwargs
+            self, db: Session, order_asc=True, paging_params: Params = None, **kwargs
     ) -> Optional[ModelType]:
-        model_query = db.query(self.model)
+        """
+        Get one or many records by fields. Default: get one
+        order_asc:  order of id. Default: True
+                    Eg: order_asc = True, get oldest record
+                        order_asc = False, get latest record
+        paging_params: set paging params if want to get many record
+        kwargs: table fields
+
+        Example usage:
+        student.get_by_fields(db, paging_params=paging_params, grade=8)
+        => Get list of students whose grade is 8
+        """
+        query = db.query(self.model)
         for key, value in kwargs.items():
             if hasattr(self.model, key):
-                model_query = model_query.filter(getattr(self.model, key) == value)
+                query = query.filter(getattr(self.model, key) == value)
         if not order_asc:
-            model_query = model_query.order_by(desc(self.model.id))
-        return model_query.all() if get_all else model_query.first()
+            query = query.order_by(desc(self.model.id))
+        return paginate(query, paging_params) if paging_params else query.first()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
