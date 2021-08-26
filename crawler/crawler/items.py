@@ -11,4 +11,11 @@ class Course(scrapy.Item):
     title = scrapy.Field()
     description = scrapy.Field()
     outcome = scrapy.Field()
-    pass
+
+
+class Job(scrapy.Item):
+    title = scrapy.Field()
+    company_name = scrapy.Field()
+    company_location = scrapy.Field()
+    short_description = scrapy.Field()
+    description = scrapy.Field()

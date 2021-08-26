@@ -1,10 +1,16 @@
-from typing import Counter
 import scrapy
 from crawler.items import Course
 import string
 
-class QuotesSpider(scrapy.Spider):
+class CourseSpider(scrapy.Spider):
     name = "rmit_courses"
+    
+    custom_settings = {
+        "ITEM_PIPELINES": {
+            'crawler.pipelines.DuplicatesPipeline': 800,
+            'crawler.pipelines.CleanPipeline': 300,
+        }
+    }
 
     def start_requests(self):
         urls = [
