@@ -51,7 +51,7 @@ class JobSpider(scrapy.Spider):
     # &start=10
     start_urls = ['https://vn.indeed.com/jobs?q=software+engineer&l=Ho+Chi+Minh+City']
     
-    limit_page = 10
+    limit_page = 5
     page = 0
 
     def parse(self, response, **kwargs):
