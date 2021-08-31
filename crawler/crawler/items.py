@@ -19,3 +19,4 @@ class Job(scrapy.Item):
     company_location = scrapy.Field()
     short_description = scrapy.Field()
     description = scrapy.Field()
+    link = scrapy.Field()

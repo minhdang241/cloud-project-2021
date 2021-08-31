@@ -1,23 +1,32 @@
-import datetime
-
-from sqlalchemy import (Column, String, TIMESTAMP)
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import (Column, String, Integer, ForeignKey)
 from sqlalchemy.orm import relationship
-from sqlalchemy_json import mutable_json_type
 
 from .setup_postgres import Base
+from .type import course_level_type, career_type
 
 
-class Sample(Base):
-    user_id = Column(String)
-    request_name = Column(String)
-    schedule = Column(String)
-    created_at = Column(
-        TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
-    )
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        default=datetime.datetime.utcnow)
-    request_metadata = Column(
-        "metadata", mutable_json_type(dbtype=JSONB, nested=True))
+class School(Base):
+    name = Column(String)
+    courses = relationship("Course", back_populates="school")
 
-    resources = relationship("RequestResource", back_populates="request")
+
+class Course(Base):
+    school_id = Column(Integer, ForeignKey(
+        "Schools.school_id", ondelete="SET NULL"))
+    code = Column(String)
+    title = Column(String)
+    description = Column(String)
+    outcome = Column(String)
+    level = Column(course_level_type)
+
+    school = relationship("School", back_populates="courses")
+
+
+class Job(Base):
+    title = Column(String)
+    company_name = Column(String)
+    company_location = Column(String)
+    short_description = Column(String)
+    description = Column(String)
+    link = Column(String)
+    career = Column(career_type)

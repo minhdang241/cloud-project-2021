@@ -3,9 +3,24 @@ File contains constant string or class
 """
 
 
-class SampleType:
-    CRAWL = "CRAWL"
-    TRANSFORM = "TRANSFORM"
+class CourseLevelType:
+    BASIC = "BASIC"
+    ADVANCED = "ADVANCED"
+
+
+class CareerType(object):
+    FE = "Frontend Engineer"
+    BE = "Backend Engineer"
+    FULL = "Full-stack Engineer"
+    IOS = "IOS Developer"
+    ANDROID = "Android Developer"
+    CYBER = "Cyber Security"
+    TESTER = "Software Tester"
+    ML = "ML/AI Engineer"
+    DEVOPS = "DevOps"
+    WEB = "Web Developer"
+    DATA = "Data Engineer"
+    SOFTWARE = "Software Engineer"
 
 
 DEFAULT_NAMESPACE = "default"
