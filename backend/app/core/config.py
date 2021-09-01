@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List
+from typing import List
 
 from dotenv import load_dotenv
 from pydantic import BaseSettings
@@ -18,15 +18,7 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://localhost",
     ]
-    BACKEND_ADDRESS: str = os.getenv("BACKEND_ADDRESS")
-
-    # Keycloak server
-    KEYCLOAK_CONFIG: Dict[str, str] = {
-        "realm_name": os.getenv("KEYCLOAK_REALM"),
-        "client_id": os.getenv("KEYCLOAK_CLIENT_ID"),
-        "server_url": os.getenv("KEYCLOAK_SERVER_URL"),
-        "client_secret_key": os.getenv("KEYCLOAK_CLIENT_SECRET_KEY"),
-    }
+    # BACKEND_ADDRESS: str = os.getenv("BACKEND_ADDRESS")
 
     # Postgres db information
     POSTGRES_USER: str = os.getenv("POSTGRES_USER")
@@ -42,10 +34,10 @@ class Settings(BaseSettings):
         os.getenv("POSTGRES_DB_NAME"),
     )
 
-    NAMESPACE: str = os.getenv("NAMESPACE")
+    # NAMESPACE: str = os.getenv("NAMESPACE")
 
     # List of docker images
-    SAMPLE_IMAGE: str = os.getenv("SAMPLE_IMAGE")
+    # SAMPLE_IMAGE: str = os.getenv("SAMPLE_IMAGE")
 
 
 settings = Settings()

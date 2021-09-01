@@ -1,8 +1,10 @@
-from sqlalchemy import (Column, String, Integer, ForeignKey)
+from sqlalchemy import (Column, ForeignKey, Integer, String)
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
+from sqlalchemy_json import mutable_json_type
 
 from .setup_postgres import Base
-from .type import course_level_type, career_type
+from .type import career_type, course_level_type
 
 
 class School(Base):
@@ -18,7 +20,7 @@ class Course(Base):
     description = Column(String)
     outcome = Column(String)
     level = Column(course_level_type)
-
+    skills = Column("metrics", mutable_json_type(dbtype=JSONB, nested=True))
     school = relationship("School", back_populates="courses")
 
 
