@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 from collections import defaultdict
@@ -5,7 +6,8 @@ from collections import defaultdict
 import psycopg2
 from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def add_space(ent):
@@ -79,8 +81,11 @@ def extract_skills(classifier, desc):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--job', action='store_true')
+    args = parser.parse_args()
     conn = None
-    course_descriptions = []
+    descriptions = []
     try:
         conn = psycopg2.connect(
             dbname="cloud",
@@ -91,11 +96,18 @@ if __name__ == "__main__":
         )
 
         cur = conn.cursor()
+        if args.job:
+            id_name = 'job_id'
+            table_name = 'Jobs'
+        else:
+            id_name = 'course_id'
+            table_name = 'Courses'
 
-        cur.execute('SELECT course_id, description FROM "Courses"')
+        cur.execute(f'SELECT {id_name}, description FROM "{table_name}"')
+
         rows = cur.fetchall()
         for row in rows:
-            course_descriptions.append((row[0], row[1]))
+            descriptions.append((row[0], row[1]))
 
         checkpoint = "mrm8488/codebert-base-finetuned-stackoverflow-ner"
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)
@@ -103,19 +115,20 @@ if __name__ == "__main__":
         classifier = pipeline("token-classification", model=model, tokenizer=tokenizer)
 
         rows = []
-        for id, desc in course_descriptions:
+        for id, desc in descriptions:
             skills = extract_skills(classifier, desc)
-            row_vals = {'course_id': id, 'skills': json.dumps(skills)}
+            row_vals = {f'{id_name}': id, 'skills': json.dumps(skills)}
+            logging.debug(row_vals)
             rows.append(row_vals)
 
         logging.debug(len(rows))
         cur.executemany(
-            '''
-                UPDATE "Courses"
+            f'''
+                UPDATE "{table_name}" 
                 SET
                     skills = %(skills)s
                 WHERE
-                    course_id = %(course_id)s
+                    {id_name} = %({id_name})s
             ''', tuple(rows)
         )
 

@@ -1,10 +1,10 @@
-from typing import Any, Dict, Generic, Optional, Type, TypeVar, Union
+from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
-from fastapi_pagination import Params
+from fastapi_pagination import Page, Params
 from fastapi_pagination.ext.sqlalchemy import paginate
 from pydantic import BaseModel
-from sqlalchemy import desc
+from sqlalchemy import asc, desc
 from sqlalchemy.orm import Session
 
 from app.db.errors import EntityDoesNotExist
@@ -22,14 +22,32 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.model = model
 
-    def get(self, db: Session, paging_params: Params):
-        return paginate(db.query(self.model), paging_params)
+    def get(self, db: Session, paging_params: Params = None, fields: List[str] = None):
+        if fields:
+            query = db.query(*[getattr(self.model, key) for key in fields])
+        else:
+            query = db.query(self.model)
+        return paginate(query, paging_params) if paging_params else query.all()
 
     def get_by_id(self, db: Session, id: Any) -> Optional[ModelType]:
         obj = db.query(self.model).filter(self.model.id == id).first()
         if not obj:
             raise EntityDoesNotExist("{0} with id {1} does not exist".format(self.model.__name__, id))
         return obj
+
+    def filter_by(self, db: Session, order_desc=True, paging_params: Params = None, **kwargs) -> Union[Page, List]:
+        query = db.query(self.model)
+        for key, value in kwargs.items():
+            if hasattr(self.model, key):
+                if type(value) == list:
+                    query = query.filter(getattr(self.model, key).in_(value))
+                else:
+                    query = query.filter(getattr(self.model, key) == value)
+        if order_desc:
+            query = query.order_by(desc(self.model.id))
+        else:
+            query = query.order_by(asc(self.model.id))
+        return paginate(query, paging_params) if paging_params else query.all()
 
     def get_by_fields(
             self, db: Session, order_asc=True, paging_params: Params = None, **kwargs

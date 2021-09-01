@@ -11,7 +11,6 @@ load_dotenv(os.path.join(BASE_DIR, "env/.env"))
 class Settings(BaseSettings):
     API_PREFIX: str = os.getenv("API_PREFIX", "/api")
     PROJECT_NAME: str = os.getenv("PROJECT_NAME", "CLOUD PROJECT")
-    LOGGING_CONFIG_FILE = os.path.join(BASE_DIR, "logging.ini")
     BACKEND_CORS_ORIGINS: List[str] = [
         # React localhost
         os.getenv("FRONTEND_ADDRESS"),

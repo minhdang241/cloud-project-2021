@@ -13,6 +13,7 @@ class School(Base):
 
 
 class Course(Base):
+    id = Column('course_id', Integer, primary_key=True)
     school_id = Column(Integer, ForeignKey(
         "Schools.school_id", ondelete="SET NULL"))
     code = Column(String)
@@ -20,7 +21,8 @@ class Course(Base):
     description = Column(String)
     outcome = Column(String)
     level = Column(course_level_type)
-    skills = Column("metrics", mutable_json_type(dbtype=JSONB, nested=True))
+    skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
+    embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))
     school = relationship("School", back_populates="courses")
 
 
@@ -32,3 +34,5 @@ class Job(Base):
     description = Column(String)
     link = Column(String)
     career = Column(career_type)
+    skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
+    embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))

@@ -3,21 +3,19 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
+from fastapi.logger import logger
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 from starlette.exceptions import HTTPException
 
 from app.api.api import router
-from app.api.errors.handlers import (
-    entity_error_handler,
-    http_error_handler,
-    validation_exception_handler,
-    request_validation_exception_handler
-)
+from app.api.errors.handlers import (entity_error_handler, http_error_handler, request_validation_exception_handler,
+                                     validation_exception_handler)
 from app.core.config import settings
 from app.db.errors import EntityDoesNotExist
 
-logging.config.fileConfig(settings.LOGGING_CONFIG_FILE, disable_existing_loggers=False)
+logging.basicConfig(level=logging.DEBUG)
+logger.setLevel(logging.DEBUG)
 
 
 def get_application() -> FastAPI:
