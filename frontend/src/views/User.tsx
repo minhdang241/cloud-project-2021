@@ -1,4 +1,3 @@
-
 import React from "react";
 
 // reactstrap components
@@ -24,10 +23,7 @@ function User() {
           <Col md="4">
             <Card className="card-user">
               <div className="image">
-                <img
-                  alt="..."
-                  src={require("assets/img/damir-bosnjak.jpg").default}
-                />
+                <img alt="..." src={require("assets/img/damir-bosnjak.jpg").default} />
               </div>
               <CardBody>
                 <div className="author">
@@ -35,7 +31,7 @@ function User() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/mike.jpg").default}
+                      src={require("assets/img/damir-bosnjak.jpg").default}
                     />
                     <h5 className="title">Chet Faker</h5>
                   </a>
@@ -72,111 +68,6 @@ function User() {
                 </div>
               </CardFooter>
             </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Team Members</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <ul className="list-unstyled team-members">
-                  <li>
-                    <Row>
-                      <Col md="2" xs="2">
-                        <div className="avatar">
-                          <img
-                            alt="..."
-                            className="img-circle img-no-padding img-responsive"
-                            src={
-                              require("assets/img/faces/ayo-ogunseinde-2.jpg")
-                                .default
-                            }
-                          />
-                        </div>
-                      </Col>
-                      <Col md="7" xs="7">
-                        DJ Khaled <br />
-                        <span className="text-muted">
-                          <small>Offline</small>
-                        </span>
-                      </Col>
-                      <Col className="text-right" md="3" xs="3">
-                        <Button
-                          className="btn-round btn-icon"
-                          color="success"
-                          outline
-                          size="sm"
-                        >
-                          <i className="fa fa-envelope" />
-                        </Button>
-                      </Col>
-                    </Row>
-                  </li>
-                  <li>
-                    <Row>
-                      <Col md="2" xs="2">
-                        <div className="avatar">
-                          <img
-                            alt="..."
-                            className="img-circle img-no-padding img-responsive"
-                            src={
-                              require("assets/img/faces/joe-gardner-2.jpg")
-                                .default
-                            }
-                          />
-                        </div>
-                      </Col>
-                      <Col md="7" xs="7">
-                        Creative Tim <br />
-                        <span className="text-success">
-                          <small>Available</small>
-                        </span>
-                      </Col>
-                      <Col className="text-right" md="3" xs="3">
-                        <Button
-                          className="btn-round btn-icon"
-                          color="success"
-                          outline
-                          size="sm"
-                        >
-                          <i className="fa fa-envelope" />
-                        </Button>
-                      </Col>
-                    </Row>
-                  </li>
-                  <li>
-                    <Row>
-                      <Col md="2" xs="2">
-                        <div className="avatar">
-                          <img
-                            alt="..."
-                            className="img-circle img-no-padding img-responsive"
-                            src={
-                              require("assets/img/faces/clem-onojeghuo-2.jpg")
-                                .default
-                            }
-                          />
-                        </div>
-                      </Col>
-                      <Col className="col-ms-7" xs="7">
-                        Flume <br />
-                        <span className="text-danger">
-                          <small>Busy</small>
-                        </span>
-                      </Col>
-                      <Col className="text-right" md="3" xs="3">
-                        <Button
-                          className="btn-round btn-icon"
-                          color="success"
-                          outline
-                          size="sm"
-                        >
-                          <i className="fa fa-envelope" />
-                        </Button>
-                      </Col>
-                    </Row>
-                  </li>
-                </ul>
-              </CardBody>
-            </Card>
           </Col>
           <Col md="8">
             <Card className="card-user">
@@ -189,29 +80,18 @@ function User() {
                     <Col className="pr-1" md="5">
                       <FormGroup>
                         <label>Company (disabled)</label>
-                        <Input
-                          defaultValue="Creative Code Inc."
-                          disabled
-                          placeholder="Company"
-                          type="text"
-                        />
+                        <Input defaultValue="Creative Code Inc." disabled placeholder="Company" type="text" />
                       </FormGroup>
                     </Col>
                     <Col className="px-1" md="3">
                       <FormGroup>
                         <label>Username</label>
-                        <Input
-                          defaultValue="michael23"
-                          placeholder="Username"
-                          type="text"
-                        />
+                        <Input defaultValue="michael23" placeholder="Username" type="text" />
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="4">
                       <FormGroup>
-                        <label htmlFor="exampleInputEmail1">
-                          Email address
-                        </label>
+                        <label htmlFor="exampleInputEmail1">Email address</label>
                         <Input placeholder="Email" type="email" />
                       </FormGroup>
                     </Col>
@@ -220,21 +100,13 @@ function User() {
                     <Col className="pr-1" md="6">
                       <FormGroup>
                         <label>First Name</label>
-                        <Input
-                          defaultValue="Chet"
-                          placeholder="Company"
-                          type="text"
-                        />
+                        <Input defaultValue="Chet" placeholder="Company" type="text" />
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="6">
                       <FormGroup>
                         <label>Last Name</label>
-                        <Input
-                          defaultValue="Faker"
-                          placeholder="Last Name"
-                          type="text"
-                        />
+                        <Input defaultValue="Faker" placeholder="Last Name" type="text" />
                       </FormGroup>
                     </Col>
                   </Row>
@@ -242,11 +114,7 @@ function User() {
                     <Col md="12">
                       <FormGroup>
                         <label>Address</label>
-                        <Input
-                          defaultValue="Melbourne, Australia"
-                          placeholder="Home Address"
-                          type="text"
-                        />
+                        <Input defaultValue="Melbourne, Australia" placeholder="Home Address" type="text" />
                       </FormGroup>
                     </Col>
                   </Row>
@@ -254,21 +122,13 @@ function User() {
                     <Col className="pr-1" md="4">
                       <FormGroup>
                         <label>City</label>
-                        <Input
-                          defaultValue="Melbourne"
-                          placeholder="City"
-                          type="text"
-                        />
+                        <Input defaultValue="Melbourne" placeholder="City" type="text" />
                       </FormGroup>
                     </Col>
                     <Col className="px-1" md="4">
                       <FormGroup>
                         <label>Country</label>
-                        <Input
-                          defaultValue="Australia"
-                          placeholder="Country"
-                          type="text"
-                        />
+                        <Input defaultValue="Australia" placeholder="Country" type="text" />
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="4">
@@ -291,11 +151,7 @@ function User() {
                   </Row>
                   <Row>
                     <div className="update ml-auto mr-auto">
-                      <Button
-                        className="btn-round"
-                        color="primary"
-                        type="submit"
-                      >
+                      <Button className="btn-round" color="primary" type="submit">
                         Update Profile
                       </Button>
                     </div>

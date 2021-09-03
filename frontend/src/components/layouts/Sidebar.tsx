@@ -1,9 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
-// javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
-import logo from "logo.svg";
 
 let ps: any;
 
@@ -27,6 +24,12 @@ function Sidebar(props: any) {
               </li>
             );
           })}
+          <li>
+            <NavLink to="/" className="nav-link" activeClassName="active">
+              <i className="nc-icon nc-user-run" />
+              <p>Logout</p>
+            </NavLink>
+          </li>
         </Nav>
       </div>
     </div>

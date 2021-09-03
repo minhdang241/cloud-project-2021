@@ -3,11 +3,11 @@ import React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Route, Switch, useLocation } from "react-router-dom";
 
-import DemoNavbar from "components/Navbars/DemoNavbar";
-import Footer from "components/Footer/Footer";
-import Sidebar from "components/Sidebar/Sidebar";
+import DemoNavbar from "components/layouts/DemoNavbar";
+import Footer from "components/layouts/Footer";
+import Sidebar from "components/layouts/Sidebar";
 
-import routes from "routes";
+import routes from "utils/routes";
 
 let ps: any;
 
