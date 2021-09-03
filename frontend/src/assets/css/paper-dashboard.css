@@ -4469,16 +4469,7 @@ License - nucleoapp.com/license/
   -ms-transform: translate3d(0px, 0, 0);
   transform: translate3d(0px, 0, 0);
 }
-.sidebar .logo:after,
-.off-canvas-sidebar .logo:after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 15px;
-  height: 1px;
-  width: calc(100% - 30px);
-  background-color: rgba(255, 255, 255, 0.5);
-}
+
 .sidebar .logo p,
 .off-canvas-sidebar .logo p {
   float: left;
@@ -4516,7 +4507,7 @@ License - nucleoapp.com/license/
   width: 60px;
   height: 60px;
 }
-.sidebar:before,
+/* .sidebar:before,
 .sidebar:after,
 .off-canvas-sidebar:before,
 .off-canvas-sidebar:after {
@@ -4528,7 +4519,7 @@ License - nucleoapp.com/license/
   height: 100%;
   top: 0;
   left: 0;
-}
+} */
 .sidebar:after,
 .off-canvas-sidebar:after {
   background: #66615b;
@@ -5902,9 +5893,9 @@ License - nucleoapp.com/license/
   .navbar-collapse {
     background: none !important;
   }
-  .navbar .navbar-toggle {
+  /* .navbar .navbar-toggle {
     display: none;
-  }
+  } */
   .navbar-nav .nav-link.profile-photo {
     padding: 0;
     margin: 7px 0.7rem;

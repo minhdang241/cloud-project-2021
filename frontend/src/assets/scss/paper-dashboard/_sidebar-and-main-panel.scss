@@ -61,7 +61,7 @@
     }
 
     .nav{
-        margin-top: 20px;
+        margin-top: 50px;
         display: block;
 
         .caret{
@@ -176,16 +176,6 @@
             @include transform-translate-x(0px);
         }
 
-        &:after{
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 15px;
-            height: 1px;
-            width: calc(100% - 30px);
-            background-color: $opacity-5;
-
-        }
 
         p{
             float: left;

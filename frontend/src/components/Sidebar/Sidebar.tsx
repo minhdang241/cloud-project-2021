@@ -13,31 +13,8 @@ function Sidebar(props: any) {
   const activeRoute = (routeName: any) => {
     return props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
-  React.useEffect(() => {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(sidebar?.current ?? "", {
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-    }
-    return function cleanup() {
-      if (navigator.platform.indexOf("Win") > -1) {
-        ps.destroy();
-      }
-    };
-  });
   return (
     <div className="sidebar" data-color={props.bgColor} data-active-color={props.activeColor}>
-      <div className="logo">
-        <a href="https://www.creative-tim.com" className="simple-text logo-mini">
-          <div className="logo-img">
-            <img src={logo} alt="react-logo" />
-          </div>
-        </a>
-        <a href="https://www.creative-tim.com" className="simple-text logo-normal">
-          Creative Tim
-        </a>
-      </div>
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>
           {props.routes.map((prop: any, key: any) => {

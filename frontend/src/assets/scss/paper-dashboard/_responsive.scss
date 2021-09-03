@@ -1,4 +1,4 @@
-@media screen and (max-width: 991px){
+@media screen and (max-width: 1920px){
 
   .navbar {
     padding: 0;
@@ -319,13 +319,13 @@
 }
 
 @media screen and (min-width: 992px){
-    .navbar-collapse{
-        background: none !important;
-    }
+    // .navbar-collapse{
+    //     background: none !important;
+    // }
 
-    .navbar .navbar-toggle{
-        display: none;
-    }
+    // .navbar .navbar-toggle{
+    //     display: none;
+    // }
 
     .navbar-nav{
         .nav-link{
