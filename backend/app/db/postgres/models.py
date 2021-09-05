@@ -33,6 +33,15 @@ class Job(Base):
     short_description = Column(String)
     description = Column(String)
     link = Column(String)
-    career = Column(career_type)
     skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
+    embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))
+    career_id = Column(Integer, ForeignKey("Careers.career_id"))
+    preprocessed_description = Column(String)
+
+
+class Career(Base):
+    career_path = Column(career_type)
+    skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
+    total_jobs = Column(Integer)
+    jobs = relationship("Job", cascade="delete", backref="career")
     embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))

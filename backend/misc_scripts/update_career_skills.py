@@ -1,9 +1,9 @@
 import argparse
 import json
 import logging
+from collections import defaultdict
 
 import psycopg2
-from sentence_transformers import SentenceTransformer
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(levelname)s - %(message)s')
@@ -24,39 +24,32 @@ if __name__ == "__main__":
         )
 
         cur = conn.cursor()
-        if args.job:
-            id_name = 'job_id'
-            table_name = 'Jobs'
-        else:
-            id_name = 'course_id'
-            table_name = 'Courses'
-
-        cur.execute(f'SELECT {id_name}, preprocessed_description FROM "{table_name}"')
-
+        cur.execute(f'SELECT career_id FROM "Careers"')
         rows = cur.fetchall()
+        hash_map = defaultdict(set)
         for row in rows:
-            descriptions.append((row[0], row[1]))
+            career_id = row[0]
+            cur.execute(f'SELECT skills FROM "Jobs" WHERE career_id={career_id}')
+            results = cur.fetchall()
+            for res in results:
+                hash_map[career_id].update(res[0])
+        data = []
+        for k, v in hash_map.items():
+            data.append({'career_id': k, 'skills': json.dumps(list(v))})
 
-        sent_model = SentenceTransformer('paraphrase-MiniLM-L12-v2')
-        rows = []
-        for id, desc in descriptions:
-            embedding = sent_model.encode(desc, convert_to_tensor=True)
-            print(len(embedding.tolist()))
-            row_vals = {f'{id_name}': id, 'embeddings': json.dumps(embedding.tolist())}
-            rows.append(row_vals)
-
-        logging.debug(len(rows))
         cur.executemany(
-            f'''
-                UPDATE "{table_name}"
+            '''
+                UPDATE "Careers"
                 SET
-                    embeddings = %(embeddings)s
+                    skills = %(skills)s
                 WHERE
-                    {id_name} = %({id_name})s
-            ''', tuple(rows)
+                    career_id = %(career_id)s
+            ''', tuple(data)
         )
+
         conn.commit()
         cur.close()
+        logging.info("UPDATE successfully")
 
     except (Exception, psycopg2.DatabaseError) as error:
         logging.error(error)

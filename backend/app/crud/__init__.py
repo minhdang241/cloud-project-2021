@@ -8,6 +8,7 @@ from app.db.postgres.models import (
     School
 )
 from .crud_base import CRUDBase
+from .crud_career import career
 from .crud_course import course
 # Import CRUD object in file if need to customize crud_base
 # from .crud_sample import sample

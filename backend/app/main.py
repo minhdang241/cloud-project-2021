@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.logger import logger
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 from pydantic import ValidationError
 from starlette.exceptions import HTTPException
 
@@ -44,5 +45,6 @@ def get_application() -> FastAPI:
 
 
 app = get_application()
+add_pagination(app)
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", reload=True)
