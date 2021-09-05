@@ -10,3 +10,8 @@ class Course(BaseModel):
 class CareerRecommendationRequest(BaseModel):
     course_list: List[Course]
     topk: int = None
+
+
+class MismatchSkillsRecommendationRequest(BaseModel):
+    course_list: List[Course]
+    career_id: int

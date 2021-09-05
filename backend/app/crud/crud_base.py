@@ -29,6 +29,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             query = db.query(self.model)
         return paginate(query, paging_params) if paging_params else query.all()
 
+    def get_field_by_id(self, db: Session, id: Any, paging_params: Params = None, fields: List[str] = None):
+        if fields:
+            query = db.query(*[getattr(self.model, key) for key in fields])
+        else:
+            query = db.query(self.model)
+        return query.filter(self.model.id == id).first()
+
     def get_by_id(self, db: Session, id: Any) -> Optional[ModelType]:
         obj = db.query(self.model).filter(self.model.id == id).first()
         if not obj:
@@ -52,18 +59,6 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def get_by_fields(
             self, db: Session, order_asc=True, paging_params: Params = None, **kwargs
     ) -> Optional[ModelType]:
-        """
-        Get one or many records by fields. Default: get one
-        order_asc:  order of id. Default: True
-                    Eg: order_asc = True, get oldest record
-                        order_asc = False, get latest record
-        paging_params: set paging params if want to get many record
-        kwargs: table fields
-
-        Example usage:
-        student.get_by_fields(db, paging_params=paging_params, grade=8)
-        => Get list of students whose grade is 8
-        """
         query = db.query(self.model)
         for key, value in kwargs.items():
             if hasattr(self.model, key):

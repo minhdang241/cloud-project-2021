@@ -1,4 +1,5 @@
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
+from sqlalchemy.orm import Session, joinedload
 
 from app.db.postgres import models
 from .crud_base import CRUDBase
@@ -27,7 +28,8 @@ class JobUpdate(BaseModel):
 
 
 class CRUDJob(CRUDBase[models.Job, JobCreate, JobUpdate]):
-    pass
+    def get_job_with_career(self, db: Session):
+        return db.query(self.model).options(joinedload("career")).all()
 
 
 job = CRUDJob(models.Job)
