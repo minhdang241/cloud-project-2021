@@ -48,3 +48,16 @@ class MismatchSkillsRecommendationResponse(BaseModel):
 
     class Config:
         extra = "ignore"
+
+
+class SchoolCourse(BaseModel):
+    code: str
+    title: str
+    level: str
+
+
+class CourseRecommendationResponse(BaseModel):
+    course_list: List[SchoolCourse]
+
+    class Config:
+        extra = "ignore"

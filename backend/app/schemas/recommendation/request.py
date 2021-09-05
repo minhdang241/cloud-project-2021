@@ -15,3 +15,9 @@ class CareerRecommendationRequest(BaseModel):
 class MismatchSkillsRecommendationRequest(BaseModel):
     course_list: List[Course]
     career_id: int
+
+
+class CourseRecommendationRequest(BaseModel):
+    career_id: int
+    school_id: int
+    topk: int = None

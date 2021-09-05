@@ -44,3 +44,4 @@ class Career(Base):
     skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
     total_jobs = Column(Integer)
     jobs = relationship("Job", cascade="delete", backref="career")
+    embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))
