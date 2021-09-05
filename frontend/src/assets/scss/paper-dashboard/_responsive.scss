@@ -125,7 +125,9 @@
     .nav-open{
         .main-panel{
             right: 0;
-            @include transform-translate-x(260px);
+            // @include transform-translate-x(260px);
+            // margin-left: 260px;
+            width: $sidebar-width;
         }
 
         .sidebar{
@@ -266,9 +268,9 @@
 
 
 
-    .main-panel{
-      width: 100%;
-    }
+    // .main-panel{
+    //   width: 100%;
+    // }
 
     .timeline{
       &:before{
