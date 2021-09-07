@@ -50,16 +50,33 @@
 # # print(instance)
 # # db.flush()
 # # db.close()
-from typing import Any, Optional
+from collections import defaultdict
+from typing import Any, Optional, List
 import psycopg2
+import psycopg2.extras
 from pydantic import BaseModel
+import json
 
 class Career(BaseModel):
     career_id: int
     career_path: str
+    skills = set()
+    total_jobs = 0
+    embeddings = list()
+    embeddings_list = list()
+    
+class Job(BaseModel):
+    # job_id: int
+    title: str = "hehell"
+    company_name: str = "name"
+    company_location: str = "na"
+    short_description: str = "na"
+    description: str = "des"
+    link: str = "test"
     skills: Optional[Any] = None
-    total_job: Optional[int] = 0
     embeddings: Optional[Any] = None
+    career_id: Optional[int] = 1
+    preprocessed_description: Optional[str] = None
 
 conn = psycopg2.connect(
     dbname="cloud",
@@ -70,17 +87,54 @@ conn = psycopg2.connect(
 )
 
 cur = conn.cursor()
+career = Career(career_id = 13, career_path='', total_jobs=2, skills=['na', 'test'], embeddings=[0.1, 0.2])
+cs = [career]
+query_values = []
+for c in cs:
+     query_values.append([career.career_id, career.total_jobs, 
+                          json.dumps(list(career.skills)), 
+                          json.dumps(career.embeddings)])
 
-# cur.execute('SELECT * FROM "Jobs" WHERE "Jobs".link = %s', ('https://www.indeed.com/rc/clk?jk=2903924ed4aaad4b&fccid=bb23b4fe03789986&vjs=3',))
-cur.execute('SELECT * FROM "Careers"')
-rows = cur.fetchall()
-careers = list()
-for row in rows:
-    c = Career(career_id=int(row[3]),
-                career_path=row[0],
-                skills=row[1],
-                total_job=int(row[2]),
-                embeddings=row[4])
-    careers.append(c)
-for c in careers:
-    print(c.career_path)
+update_query = """
+    UPDATE "Careers" AS c
+    SET 
+        total_jobs = e.total_jobs,
+        skills = CAST(e.skills as jsonb),
+        embeddings = CAST(e.embeddings as jsonb) 
+    FROM (VALUES %s) AS e(career_id, total_jobs, skills, embeddings) 
+    WHERE c.career_id = e.career_id
+"""
+
+psycopg2.extras.execute_values(
+cur, update_query, query_values
+)
+conn.commit()
+
+# cur.execute('SELECT career_id, career_path FROM "Careers"')
+# rows = cur.fetchall()
+# career_dict = dict()
+# for career_id, career_path in rows:
+#     career_dict[career_path] = career_id
+
+# print(career_dict)
+# select_jobs_query = """
+#     SELECT skills, embeddings, career, career_id  FROM "Jobs";
+# """
+# cur.execute(select_jobs_query)
+# rows = cur.fetchall()
+# new_career_dict = dict()
+# for skills, embeddings, career, career_id in rows:
+#     if career_id not in new_career_dict:
+#         new_career_dict[career_id] = Career(
+#             career_id=career_id,
+#             career_path=career
+#         )
+#     career: Career = new_career_dict[career_id]
+#     career.total_jobs += 1
+#     if skills:
+#         career.skills.update(skills)
+#     if embeddings:
+#         career.embeddings_list.append(embeddings)
+
+# for career_id, career in new_career_dict.items():
+#     print(career_id, career.career_path, career.total_jobs)

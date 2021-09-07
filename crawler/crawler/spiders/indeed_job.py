@@ -45,7 +45,7 @@ class JobSpider(scrapy.Spider):
     name = "indeed_job"
     
     base_url = "https://www.indeed.com"
-    jobs = []
+    skill_set = set()
     
     custom_settings = {
         "DEFAULT_REQUEST_HEADERS": {

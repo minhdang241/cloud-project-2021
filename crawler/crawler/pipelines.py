@@ -1,14 +1,22 @@
 import psycopg2
 import re
 import string
+import json
 
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from pydantic import BaseModel
-from typing import Optional, Any
+from typing import Optional, Any, List
+from .resources.career import categorize_career
+from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
+from .resources.skills import extract_skills
+from .resources.preprocess import preprocess
+from .resources.embeddings import compute_embeddings
+from .resources.query import upsert_job_query, update_careers_query
+import torch
 
 class Job(BaseModel):
-    job_id: int
+    # job_id: int
     title: str
     company_name: str
     company_location: str
@@ -17,21 +25,25 @@ class Job(BaseModel):
     link: str
     skills: Optional[Any] = None
     embeddings: Optional[Any] = None
-    career_id: int
-    preprocessed_description: str
+    career_id: Optional[int] = None
+    career: Optional[str] = None
+    preprocessed_description: Optional[str] = None
 
 
 class Career(BaseModel):
     career_id: int
     career_path: str
-    skills: Optional[Any] = None
-    total_job: Optional[int] = 0
-    embeddings: Optional[Any] = None
+    skills = set()
+    total_jobs = 0
+    embeddings = list()
+    embeddings_tensors = list()
 
 class JobDuplicatesPipeline:
 
     def __init__(self):
         self.ids_seen = set()
+    
+    def open_spider(self, spider):
         self.conn = psycopg2.connect(
             dbname="cloud",
             user="postgres",
@@ -40,16 +52,16 @@ class JobDuplicatesPipeline:
             port="10000",
         )
         cur = self.conn.cursor()
-        cur.execute('SELECT * FROM "Careers"')
+        cur.execute('SELECT career_id, career_path FROM "Careers"')
         rows = cur.fetchall()
-        careers = dict()
-        for row in rows:
-            c = Career(career_id=int(row[3]),
-                        career_path=row[0],
-                        skills=row[1],
-                        embeddings=row[4])
-            careers[c.career_path] = c
-        self.careers = careers
+        self.career_dict = dict()
+        for career_id, career_path in rows:
+            self.career_dict[career_path] = career_id
+        cur.close()
+        checkpoint = "mrm8488/codebert-base-finetuned-stackoverflow-ner"
+        tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+        model = AutoModelForTokenClassification.from_pretrained(checkpoint)
+        self.classifier = pipeline("token-classification", model=model, tokenizer=tokenizer)
 
 
     def process_item(self, item, spider):
@@ -61,20 +73,64 @@ class JobDuplicatesPipeline:
             """
             Process the item and store to database.
             """
+            job = Job(**item)
+            career_path = categorize_career(job.title)
+            job.career = career_path
+            job.career_id = self.career_dict[career_path]
+            job.preprocessed_description = preprocess(job.description)
+            job.skills = extract_skills(self.classifier, job.description)
+            job.embeddings = compute_embeddings(job.preprocessed_description)
             cur = self.conn.cursor()
-            cur.execute('SELECT * FROM "Jobs" WHERE "Jobs".link = %s', (adapter['link'],))
-
-            row = cur.fetchone()
-            if len(row) == 1:
-                self.log("EXIST")
-                self.log(row)
-                return
-            self.log("NOT EXIST")
+            cur.execute(upsert_job_query, job.__dict__)
+            self.conn.commit()
+            cur.close()
             
-            # job = Job(**item)
-            # self.log(job)
-
             return item
+        
+    def close_spider(self, spider):
+        careers = self.calculate_careers()
+        
+        cur = self.conn.cursor()
+        query_values = []
+        for career in careers:
+            query_values.append([career.career_id, career.total_jobs, 
+                                json.dumps(list(career.skills)), 
+                                json.dumps(career.embeddings)])
+
+        psycopg2.extras.execute_values(
+            cur, update_careers_query, query_values
+        )
+        self.conn.commit()
+        cur.close()
+        self.conn.close()
+        
+    def calculate_careers(self) -> List[Career]:
+        cur = self.conn.cursor()
+        
+        # Calculate new career
+        select_jobs_query = """
+            SELECT skills, embeddings, career, career_id  FROM "Jobs";
+        """
+        cur.execute(select_jobs_query)
+        rows = cur.fetchall()
+        new_career_dict = dict()
+        for skills, embeddings, career, career_id in rows:
+            if career_id not in new_career_dict:
+                new_career_dict[career_id] = Career(
+                    career_id=career_id,
+                    career_path=career
+                )
+            career: Career = new_career_dict[career_id]
+            career.total_jobs += 1
+            if skills:
+                career.skills.update(skills)
+            if embeddings:
+                career.embeddings_tensors.append(torch.Tensor(embeddings))
+        for c in new_career_dict.values():
+            c.embeddings = torch.mean(torch.stack(c.embeddings_tensors, dim=0), dim=0)
+        cur.close()
+        return new_career_dict.values()
+
 class DuplicatesPipeline:
 
     def __init__(self):
