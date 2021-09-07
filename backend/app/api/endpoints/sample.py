@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from app.resources.utils import get_db
 from app.schemas.sample import request, response
 from fastapi_pagination import Params, Page
-from app.resources import strings
 from app import crud
 router = APIRouter()
 
@@ -40,3 +39,18 @@ def get_jobs(
         db_session: Session = Depends(get_db),
 ) -> Page[response.JobDTO]:
     return crud.job.get(db_session, paging_params=paging_params)
+
+
+@router.get("/careers", response_model=Page[response.CareerDTO])
+def get_careers(
+        paging_params: Params = Depends(),
+        db_session: Session = Depends(get_db)
+) -> Page[response.CareerDTO]:
+    return crud.career.get(db_session, paging_params=paging_params)
+
+
+@router.get("/courses/types")
+def get_course_type(
+        db_session: Session = Depends(get_db)
+):
+    return crud.course.get_course_level_count(db_session)

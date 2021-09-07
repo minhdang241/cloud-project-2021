@@ -1,6 +1,9 @@
 from typing import Optional
 
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+
 
 from app.db.postgres import models
 from .crud_base import CRUDBase
@@ -29,7 +32,8 @@ class CourseUpdate(BaseModel):
 
 
 class CRUDCourse(CRUDBase[models.Course, CourseCreate, CourseUpdate]):
-    pass
+    def get_course_level_count(self, db: Session):
+        return db.query(self.model.level, func.count(self.model.level).label("count")).group_by(self.model.level).all()
 
 
 course = CRUDCourse(models.Course)

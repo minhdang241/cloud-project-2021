@@ -1,11 +1,5 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 
-RUN curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list && \
-    apt-get update && apt-get install -y kubectl
-
-ENV KUBE_CONFIG=""
-
 ENV ENV_CONFIG=""
 
 EXPOSE 8000
@@ -17,5 +11,9 @@ WORKDIR /app
 COPY requirements.txt ./requirements.txt
 
 RUN pip3 install -r requirements.txt
+
+RUN pip3 install torch==1.9.0+cpu torchvision==0.10.0+cpu torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+
+RUN pip3 install sentence-transformers
 
 COPY . .

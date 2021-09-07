@@ -6,6 +6,16 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
+class CareerDTO(BaseModel):
+    id: int
+    career_path: str
+    total_jobs: Optional[int]
+
+    class Config:
+        orm_mode = True
+        extra = "ignore"
+
+
 class CourseDTO(BaseModel):
     id: int
     code: Optional[str]
