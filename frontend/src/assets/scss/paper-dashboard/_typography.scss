@@ -192,7 +192,12 @@ a.text-gray:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: {
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.8rem;
+    right: 0.8rem;
+  }
   i {
     visibility: hidden;
   }

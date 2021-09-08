@@ -8,3 +8,14 @@ export const getAllCourses = (page?: number, size?: number) => {
     params: paramsDTO,
   });
 };
+
+export const getRecommendCareer = (list: number[]) => {
+  const snakeList = keysToSnake(
+    list.map((c) => {
+      return { courseId: c };
+    }),
+  );
+  const body = keysToSnake({ courseList: snakeList });
+  console.log(body);
+  return axios.post(`${API.BACKEND}/careers`, body);
+};

@@ -18,7 +18,7 @@ import {
   Button,
   Spinner,
 } from "reactstrap";
-import { getAllCourses } from "services/courseService";
+import { getAllCourses, getRecommendCareer } from "services/courseService";
 import { CourseDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
 import { Course } from "utils/Types";
@@ -26,10 +26,10 @@ import CourseDetails from "components/Recommend/CourseDetails";
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
-  const [added, setAdded] = useState<boolean>(false);
 
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState<string>("");
   const dropdownToggle = (e: any) => {
     setDropdownOpen(!dropdownOpen);
   };
@@ -37,17 +37,35 @@ function Tables() {
   useEffect(() => {
     (async () => {
       try {
-        setLoading(true);
+        setLoading("courses");
         const { data } = await getAllCourses(page, 10);
         const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
         setCourses(tempCourses);
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        setLoading("");
       }
     })();
   }, [page]);
+
+  const updateSelectedCourses = (course: Course) => {
+    if (selectedCourses.includes(course)) {
+      const tmp: Course[] = selectedCourses.filter((c) => c.id !== course.id);
+      setSelectedCourses(tmp);
+    } else setSelectedCourses([...selectedCourses, course]);
+  };
+
+  const handleGetRecCareer = async () => {
+    try {
+      setLoading("career");
+      const coursesId: number[] = selectedCourses.map((c) => c.id);
+      const { data } = await getRecommendCareer(coursesId);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="content">
@@ -73,7 +91,7 @@ function Tables() {
         </Col>
       </Row>
       <Row>
-        <Col md="9">
+        <Col sm="12" xl="9">
           <Card>
             <CardHeader>
               <CardTitle tag="h5" className="mb-0">
@@ -91,7 +109,7 @@ function Tables() {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {loading === "courses" ? (
                     <tr>
                       <td colSpan={4} className="text-center py-5">
                         <Spinner
@@ -114,11 +132,15 @@ function Tables() {
                           <Button
                             title="Select course"
                             size="sm"
-                            color={added ? "danger" : "warning"}
+                            color={selectedCourses.includes(course) ? "danger" : "warning"}
                             className="p-1 ml-3"
-                            onClick={() => setAdded(!added)}
+                            onClick={() => updateSelectedCourses(course)}
                           >
-                            {!added ? <i className="fas fa-lg fa-plus"></i> : <i className="fas fa-lg fa-minus"></i>}
+                            {selectedCourses.includes(course) ? (
+                              <i className="fas fa-lg fa-minus"></i>
+                            ) : (
+                              <i className="fas fa-lg fa-plus"></i>
+                            )}
                           </Button>
                         </td>
                       </tr>
@@ -141,7 +163,7 @@ function Tables() {
             </CardBody>
           </Card>
         </Col>
-        <Col>
+        <Col sm="12" xl="3">
           <Card>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
@@ -149,14 +171,34 @@ function Tables() {
               </CardTitle>
             </CardHeader>
             <CardBody>
-              <div className="selected-course">
-                <div>Cloud Computing</div>
-                <i role="button" className="fas fa-lg fa-times text-gray" onClick={() => setAdded(false)}></i>
-              </div>
+              {selectedCourses.length == 0 ? (
+                <div className="text-muted">Please selecte at least 1 course</div>
+              ) : (
+                selectedCourses.map((course) => (
+                  <div key={course.id} className="selected-course">
+                    <div>{course.title}</div>
+                    <i
+                      role="button"
+                      className="fas fa-lg fa-times text-gray"
+                      onClick={() => updateSelectedCourses(course)}
+                    ></i>
+                  </div>
+                ))
+              )}
             </CardBody>
             <CardFooter>
               <div className="d-flex justify-content-end border-top pt-2">
-                <Button color="primary">Get recommendation</Button>
+                <Button
+                  disabled={!selectedCourses[0]}
+                  color="primary"
+                  onClick={() => setSelectedCourses([])}
+                  className="mr-3"
+                >
+                  Clear
+                </Button>
+                <Button disabled={!selectedCourses[0]} color="primary" onClick={handleGetRecCareer}>
+                  Get recommendation
+                </Button>
               </div>
             </CardFooter>
           </Card>
