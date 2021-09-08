@@ -11,4 +11,4 @@ router = APIRouter()
 auth = HTTPBearer()
 
 router.include_router(sample.router, tags=["sample"])
-router.include_router(recommendation.router, tags=["recommendation"])
+router.include_router(recommendation.router, tags=["recommendation"], prefix="/recommendation")
