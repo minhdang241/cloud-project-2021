@@ -3,7 +3,6 @@ import re
 import string
 import json
 
-from psycopg2 import pool
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from pydantic import BaseModel
@@ -52,7 +51,7 @@ class JobDuplicatesPipeline:
             port=settings.POSTGRES_PORT,
         )
         if (self.conn_pool):
-            print("Connection pool created successfully using ThreadedConnectionPool")
+            print("Connection pool created successfully")
         
         # Fetch careers
         conn = self.conn_pool.getconn()
