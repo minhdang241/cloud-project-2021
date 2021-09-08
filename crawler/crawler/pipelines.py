@@ -10,7 +10,7 @@ from typing import Optional, Any, List
 from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
 from .resources import categorize_career, compute_embeddings, preprocess, extract_skills, update_careers_query, upsert_job_query
 from sentence_transformers import SentenceTransformer
-
+from settings import settings
 import torch
 
 class Job(BaseModel):
@@ -43,11 +43,11 @@ class JobDuplicatesPipeline:
     
     def open_spider(self, spider):
         self.conn = psycopg2.connect(
-            dbname="cloud",
-            user="postgres",
-            password="nB7geYEjbFT3UBUKJqfKkPuHpkKsUVsWmaDcrTdd6d6HpkKsUVsWmDaQDxJqfKkPu",
-            host="localhost",
-            port="10000",
+            dbname=settings.POSTGRES_DB_NAME,
+            user=settings.POSTGRES_USER,
+            password=settings.POSTGRES_PASSWORD,
+            host=settings.POSTGRES_HOST,
+            port=settings.POSTGRES_PORT,
         )
         cur = self.conn.cursor()
         cur.execute('SELECT career_id, career_path FROM "Careers"')

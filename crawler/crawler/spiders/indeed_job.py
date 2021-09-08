@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import string
 import re
 from urllib import parse
+from crawler.settings import settings
 
 def remove_tags(html):
     if html is None:
@@ -56,24 +57,30 @@ class JobSpider(scrapy.Spider):
         },
         "DOWNLOAD_DELAY": 2
     }
-    # &start=10
-    start_urls = [
-                'https://vn.indeed.com/jobs?q=software+engineer&l=Ho+Chi+Minh+City', 
-                #   'https://vn.indeed.com/jobs?q=data+engineer&l=Ho+Chi+Minh+City', 
-                #   'https://vn.indeed.com/jobs?q=web%20developer&l=Ho%20Chi%20Minh%20City',
-                #   'https://vn.indeed.com/jobs?q=devops&l=Ho%20Chi%20Minh%20City', 
-                #   'https://vn.indeed.com/jobs?q=android%20developer&l=Ho%20Chi%20Minh%20City',
-                #   'https://vn.indeed.com/jobs?q=machine%20learning&l=Ho%20Chi%20Minh%20City',
-                #   'https://vn.indeed.com/jobs?q=software+qa&l=Ho+Chi+Minh+City',
-                #   'https://vn.indeed.com/jobs?q=cyber%20security&l=Ho%20Chi%20Minh%20City',
-                #   'https://vn.indeed.com/jobs?q=ios%20developer&l=Ho%20Chi%20Minh%20City',
-                #   'https://vn.indeed.com/jobs?q=full%20stack%20engineer&l=Ho%20Chi%20Minh%20City',
-                #   'https://vn.indeed.com/jobs?q=backend%20engineer&l=Ho%20Chi%20Minh%20City',
-                #   'https://vn.indeed.com/jobs?q=frontend%20engineer&l=Ho%20Chi%20Minh%20City'
-        ]
     
-    limit_page = 3
-    page = 0
+    def start_requests(self):
+        start_urls = [
+                'https://vn.indeed.com/jobs?q=software+engineer&l=Ho+Chi+Minh+City', 
+                'https://vn.indeed.com/jobs?q=data+engineer&l=Ho+Chi+Minh+City', 
+                'https://vn.indeed.com/jobs?q=web%20developer&l=Ho%20Chi%20Minh%20City',
+                'https://vn.indeed.com/jobs?q=devops&l=Ho%20Chi%20Minh%20City', 
+                'https://vn.indeed.com/jobs?q=android%20developer&l=Ho%20Chi%20Minh%20City',
+                'https://vn.indeed.com/jobs?q=machine%20learning&l=Ho%20Chi%20Minh%20City',
+                'https://vn.indeed.com/jobs?q=software+qa&l=Ho+Chi+Minh+City',
+                'https://vn.indeed.com/jobs?q=cyber%20security&l=Ho%20Chi%20Minh%20City',
+                'https://vn.indeed.com/jobs?q=ios%20developer&l=Ho%20Chi%20Minh%20City',
+                'https://vn.indeed.com/jobs?q=full%20stack%20engineer&l=Ho%20Chi%20Minh%20City',
+                'https://vn.indeed.com/jobs?q=backend%20engineer&l=Ho%20Chi%20Minh%20City',
+                'https://vn.indeed.com/jobs?q=frontend%20engineer&l=Ho%20Chi%20Minh%20City'
+        ]
+        
+        if settings.LIMIT_CAREERS:
+            urls = start_urls[:int(settings.LIMIT_CAREERS)]
+        else:
+            urls = start_urls
+        self.limit_page = int(settings.LIMIT_PAGE or 1)
+        for url in urls:
+            yield Request(url, dont_filter=True)
 
     def parse(self, response, **kwargs):
         job_selectors = response.xpath('.//a[contains(@id,"job_")]')
@@ -93,9 +100,9 @@ class JobSpider(scrapy.Spider):
             yield Request(url=f"{self.base_url}{link}", callback=self.parse_job, cb_kwargs={"job": job})
         
         
-        # next_url, page = get_next_page(response.request.url)
-        # if page <= self.limit_page:
-        #     yield Request(url=next_url, callback=self.parse)
+        next_url, page = get_next_page(response.request.url)
+        if page <= self.limit_page:
+            yield Request(url=next_url, callback=self.parse)
             
     def parse_job(self, response, job: Job):
         # from scrapy.shell import inspect_response

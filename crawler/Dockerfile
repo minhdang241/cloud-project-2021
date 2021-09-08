@@ -12,4 +12,4 @@ RUN pip3 install psycopg2
 
 COPY . .
 
-CMD ["python", "test/test-extract-skills.py"]
+CMD ["scrapy", "crawl", "indeed_job"]

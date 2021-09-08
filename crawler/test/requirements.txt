@@ -1,5 +1,0 @@
-beautifulsoup4
-symspellpy
-contractions
-emoji
-unidecode
