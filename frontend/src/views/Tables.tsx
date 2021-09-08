@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 
 // reactstrap components
@@ -16,18 +16,38 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-  Label,
-  Input,
-  FormGroup,
+  Spinner,
 } from "reactstrap";
-
+import { getAllCourses } from "services/courseService";
+import { CourseDTO } from "utils/DTO";
+import { keysToCamel } from "utils/functions";
+import { Course } from "utils/Types";
+import CourseDetails from "components/Recommend/CourseDetails";
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [added, setAdded] = useState<boolean>(false);
+
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const dropdownToggle = (e: any) => {
     setDropdownOpen(!dropdownOpen);
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const { data } = await getAllCourses(page, 10);
+        const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
+        setCourses(tempCourses);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [page]);
 
   return (
     <div className="content">
@@ -36,11 +56,6 @@ function Tables() {
           <form>
             <div className="no-border input-group mb-0">
               <input placeholder="Search course name" type="text" className="form-control" />
-              {/* <div className="input-group-append">
-                <span className="input-group-text">
-                  <i className="nc-icon nc-zoom-split"></i>
-                </span>
-              </div> */}
             </div>
           </form>
         </Col>
@@ -48,12 +63,10 @@ function Tables() {
           <div className="d-flex">
             <Button className="mr-3">Search</Button>
             <Dropdown isOpen={dropdownOpen} toggle={(e: any) => dropdownToggle(e)}>
-              <DropdownToggle caret>All majors&nbsp;&nbsp;</DropdownToggle>
+              <DropdownToggle caret>All levels&nbsp;&nbsp;</DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Information Technology</DropdownItem>
-                <DropdownItem>Software Engineering</DropdownItem>
-                <DropdownItem>Electrical Engineering</DropdownItem>
-                <DropdownItem>Robotics</DropdownItem>
+                <DropdownItem>Basic</DropdownItem>
+                <DropdownItem>Advanced</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -71,42 +84,60 @@ function Tables() {
               <Table responsive>
                 <thead className="text-primary">
                   <tr>
-                    <th></th>
-                    <th>Course ID</th>
-                    <th>Course Name</th>
-                    <th>Major</th>
-                    <th className="text-right">Credits</th>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Levels</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>
-                      <Button
-                        size="sm"
-                        color={added ? "danger" : "warning"}
-                        className="p-1"
-                        onClick={() => setAdded(!added)}
-                      >
-                        {!added ? <i className="fas fa-lg fa-plus"></i> : <i className="fas fa-lg fa-minus"></i>}
-                      </Button>
-                    </td>
-                    <td>Dakota Rice</td>
-                    <td>Niger</td>
-                    <td>Oud-Turnhout</td>
-                    <td className="text-right">$36,738</td>
-                  </tr>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={4} className="text-center py-5">
+                        <Spinner
+                          color="warning"
+                          style={{
+                            width: "3rem",
+                            height: "3rem",
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ) : (
+                    courses.map((course) => (
+                      <tr key={course.id}>
+                        <td>{course.code}</td>
+                        <td>{course.title}</td>
+                        <td>{course.level === "ADVANCED" ? "Advanced" : "Basic"}</td>
+                        <td>
+                          <CourseDetails course={course} />
+                          <Button
+                            title="Select course"
+                            size="sm"
+                            color={added ? "danger" : "warning"}
+                            className="p-1 ml-3"
+                            onClick={() => setAdded(!added)}
+                          >
+                            {!added ? <i className="fas fa-lg fa-plus"></i> : <i className="fas fa-lg fa-minus"></i>}
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </Table>
-              <div className="d-flex justify-content-end">
-                <Pagination
-                  activePage={page}
-                  totalItemsCount={10}
-                  pageRangeDisplayed={5}
-                  onChange={(pageNumber) => setPage(pageNumber)}
-                  itemClass="page-item"
-                  linkClass="page-link"
-                />
-              </div>
+              {courses.length > 10 && (
+                <div className="d-flex justify-content-end">
+                  <Pagination
+                    activePage={page}
+                    totalItemsCount={10}
+                    pageRangeDisplayed={5}
+                    onChange={(pageNumber) => setPage(pageNumber)}
+                    itemClass="page-item"
+                    linkClass="page-link"
+                  />
+                </div>
+              )}
             </CardBody>
           </Card>
         </Col>
