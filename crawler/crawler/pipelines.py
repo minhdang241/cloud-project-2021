@@ -7,12 +7,10 @@ from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from pydantic import BaseModel
 from typing import Optional, Any, List
-from .resources.career import categorize_career
 from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
-from .resources.skills import extract_skills
-from .resources.preprocess import preprocess
-from .resources.embeddings import compute_embeddings
-from .resources.query import upsert_job_query, update_careers_query
+from .resources import categorize_career, compute_embeddings, preprocess, extract_skills, update_careers_query, upsert_job_query
+from sentence_transformers import SentenceTransformer
+
 import torch
 
 class Job(BaseModel):
@@ -62,6 +60,7 @@ class JobDuplicatesPipeline:
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)
         model = AutoModelForTokenClassification.from_pretrained(checkpoint)
         self.classifier = pipeline("token-classification", model=model, tokenizer=tokenizer)
+        self.sent_model = SentenceTransformer('paraphrase-MiniLM-L12-v2')
 
 
     def process_item(self, item, spider):
@@ -79,7 +78,7 @@ class JobDuplicatesPipeline:
             job.career_id = self.career_dict[career_path]
             job.preprocessed_description = preprocess(job.description)
             job.skills = extract_skills(self.classifier, job.description)
-            job.embeddings = compute_embeddings(job.preprocessed_description)
+            job.embeddings = compute_embeddings(self.sent_model, job.preprocessed_description)
             cur = self.conn.cursor()
             cur.execute(upsert_job_query, job.__dict__)
             self.conn.commit()
@@ -129,7 +128,7 @@ class JobDuplicatesPipeline:
         for c in new_career_dict.values():
             c.embeddings = torch.mean(torch.stack(c.embeddings_tensors, dim=0), dim=0)
         cur.close()
-        return new_career_dict.values()
+        return list(new_career_dict.values())
 
 class DuplicatesPipeline:
 

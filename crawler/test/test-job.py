@@ -29,7 +29,7 @@ conn = psycopg2.connect(
     dbname="cloud",
     user="postgres",
     password="nB7geYEjbFT3UBUKJqfKkPuHpkKsUVsWmaDcrTdd6d6HpkKsUVsWmDaQDxJqfKkPu",
-    host="localhost",
+    host="host.docker.internal",
     port="10000",
 )
 
@@ -58,6 +58,11 @@ def calculate_careers(conn) -> List[Career]:
     for c in new_career_dict.values():
         c.embeddings = torch.mean(torch.stack(c.embeddings_tensors, dim=0), dim=0).tolist()
     cur.close()
-    return new_career_dict.values()
+    return list(new_career_dict.values())
 
-print(calculate_careers(conn)[0])
+c1 = calculate_careers(conn)[0]
+print(c1.embeddings)
+print(c1.career_id)
+print(c1.career_path)
+print(c1.skills)
+print(c1.total_jobs)
