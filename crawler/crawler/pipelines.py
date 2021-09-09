@@ -1,4 +1,5 @@
-import psycopg2
+from psycopg2 import pool
+import psycopg2.extras
 import re
 import string
 import json
@@ -10,7 +11,7 @@ from typing import Optional, Any, List
 from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
 from .resources import categorize_career, compute_embeddings, preprocess, extract_skills, update_careers_query, upsert_job_query
 from sentence_transformers import SentenceTransformer
-from settings import settings
+from .settings import settings
 import torch
 
 class Job(BaseModel):
@@ -43,7 +44,7 @@ class JobDuplicatesPipeline:
     
     def open_spider(self, spider):
         # Open DB connection pool
-        self.conn_pool = psycopg2.pool.SimpleConnectionPool(1, 100,
+        self.conn_pool = pool.SimpleConnectionPool(1, 100,
             database=settings.POSTGRES_DB_NAME,
             user=settings.POSTGRES_USER,
             password=settings.POSTGRES_PASSWORD,
