@@ -63,7 +63,7 @@ class JobDuplicatesPipeline:
         self.conn_pool.putconn(conn)
         self.career_dict = dict()
         for career_id, career_path in rows:
-            self.career_dict[career_path] = career_id
+            self.career_dict[career_path] = int(career_id)
             
         # Load models
         checkpoint = "mrm8488/codebert-base-finetuned-stackoverflow-ner"
@@ -84,6 +84,8 @@ class JobDuplicatesPipeline:
             """
             job = Job(**item)
             career_path = categorize_career(job.title)
+            if career_path is None:
+                return
             job.career = career_path
             job.career_id = self.career_dict[career_path]
             job.preprocessed_description = preprocess(job.description)
@@ -91,7 +93,10 @@ class JobDuplicatesPipeline:
             job.embeddings = compute_embeddings(self.sent_model, job.preprocessed_description)
             conn = self.conn_pool.getconn()
             cur = conn.cursor()
-            cur.execute(upsert_job_query, job.__dict__)
+            job_dict = job.__dict__
+            job_dict["skills"] = json.dumps(job_dict["skills"])
+            job_dict["embeddings"] = json.dumps(job_dict["embeddings"])
+            cur.execute(upsert_job_query, job_dict)
             conn.commit()
             cur.close()
             self.conn_pool.putconn(conn)
