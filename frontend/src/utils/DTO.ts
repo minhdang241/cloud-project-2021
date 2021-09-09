@@ -38,18 +38,9 @@ export type CareerOptionDTO = {
   total_jobs: number;
 };
 
-export type CourseItemDTO = {
-  course_id: number;
-};
-
 export type CourseParamsDTO = {
   career_id: number;
   school_id: number;
-};
-
-export type SkillParamsDTO = {
-  course_list: CourseItemDTO[];
-  career_id: number;
 };
 
 export type SkillItemDTO = {

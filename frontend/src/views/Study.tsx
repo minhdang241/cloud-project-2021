@@ -19,10 +19,9 @@ import {
   Spinner,
 } from "reactstrap";
 import { getAllCareers, getCoursesByCareer, getSkills } from "services/studyService";
-import { CareerDTO, CareerOptionDTO, CourseDTO, SkillDTO } from "utils/DTO";
+import { CareerOptionDTO, CourseDTO, SkillDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
-import { Career, CareerOption, Course, CourseItem, Job, Skill } from "utils/Types";
-import CourseDetails from "components/Path/CourseDetails";
+import { CareerOption, Course, Skill } from "utils/Types";
 
 function StudyPath() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -89,8 +88,8 @@ function StudyPath() {
   const analyseSkills = async () => {
     try {
       setLoading("skills");
-      const coursesId: CourseItem[] = selectedCourses.map((c) => {
-        return { courseId: c.id };
+      const coursesId: number[] = selectedCourses.map((c) => {
+        return c.id;
       });
       const { data } = await getSkills(coursesId, selectedCareer?.id || 0);
       const tmp: Skill = keysToCamel(data as SkillDTO);
@@ -255,9 +254,10 @@ function StudyPath() {
                   <div
                     key={id}
                     className="selected-course"
+                    role="button"
                     onClick={() => setRecommendCourses(skill.recommendedCourses)}
                   >
-                    <div role="button">{skill.name}</div>
+                    <span>{skill.name}</span>
                   </div>
                 ))
               )}
@@ -279,9 +279,10 @@ function StudyPath() {
                   <div
                     key={id}
                     className="selected-course"
+                    role="button"
                     onClick={() => setRecommendCourses(skill.recommendedCourses)}
                   >
-                    <div role="button">{skill.name}</div>
+                    <span>{skill.name}</span>
                   </div>
                 ))
               )}

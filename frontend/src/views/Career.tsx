@@ -21,7 +21,7 @@ import {
 import { getAllCourses, getRecommendCareer } from "services/careerService";
 import { CareerDTO, CourseDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
-import { Career, Course, CourseItem, Job } from "utils/Types";
+import { Career, Course, Job } from "utils/Types";
 import CourseDetails from "components/Path/CourseDetails";
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -65,8 +65,8 @@ function Tables() {
     try {
       setLoading("career");
       setJobs([]);
-      const coursesId: CourseItem[] = selectedCourses.map((c) => {
-        return { courseId: c.id };
+      const coursesId: number[] = selectedCourses.map((c) => {
+        return c.id;
       });
       const { data } = await getRecommendCareer(coursesId);
       const tmp: Career[] = keysToCamel(data.career_list as CareerDTO);
