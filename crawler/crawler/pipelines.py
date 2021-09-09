@@ -148,7 +148,7 @@ class JobDuplicatesPipeline:
             if embeddings:
                 career.embeddings_tensors.append(torch.Tensor(embeddings))
         for c in new_career_dict.values():
-            c.embeddings = torch.mean(torch.stack(c.embeddings_tensors, dim=0), dim=0)
+            c.embeddings = torch.mean(torch.stack(c.embeddings_tensors, dim=0), dim=0).tolist()
         
         return list(new_career_dict.values())
 
