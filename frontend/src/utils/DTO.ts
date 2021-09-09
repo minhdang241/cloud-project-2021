@@ -32,6 +32,12 @@ export type CareerDTO = {
   job_list: KeysToCamelCase<JobDTO>[];
 };
 
+export type CareerOptionDTO = {
+  id: number;
+  career_path: string;
+  total_jobs: number;
+};
+
 export type CourseItemDTO = {
   course_id: number;
 };
@@ -44,4 +50,14 @@ export type CourseParamsDTO = {
 export type SkillParamsDTO = {
   course_list: CourseItemDTO[];
   career_id: number;
+};
+
+export type SkillItemDTO = {
+  name: string;
+  recommended_courses: CourseDTO[];
+};
+
+export type SkillDTO = {
+  missing_skills: KeysToCamelCase<SkillItemDTO>[];
+  matching_skills: KeysToCamelCase<SkillItemDTO>[];
 };

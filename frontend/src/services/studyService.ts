@@ -11,10 +11,12 @@ export const getAllCareers = (page?: number, size?: number) => {
   });
 };
 
-export const getRecommendCourses = (career: number) => {
+export const getCoursesByCareer = (career: number, page?: number, size?: number) => {
+  const paramsDTO = keysToSnake({ page: page, size: size });
   const body: CourseParams = { careerId: career, schoolId: 1 };
-  console.log(body);
-  return axios.post(`${API.BACKEND}/careers`, keysToSnake(body));
+  return axios.post(`${API.BACKEND}/courses`, keysToSnake(body), {
+    params: paramsDTO,
+  });
 };
 
 export const getSkills = (list: CourseItem[], career: number) => {
