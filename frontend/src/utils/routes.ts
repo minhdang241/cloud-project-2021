@@ -1,6 +1,7 @@
 import Dashboard from "views/Dashboard";
-import TableList from "views/Tables";
+import CareerPath from "views/Career";
 import UserPage from "views/User";
+import StudyPath from "views/Study";
 
 const routes = [
   {
@@ -18,10 +19,17 @@ const routes = [
     layout: "/admin",
   },
   {
-    path: "/tables",
-    name: "Recommendation",
-    icon: "nc-icon nc-tile-56",
-    component: TableList,
+    path: "/career",
+    name: "Career Path",
+    icon: "nc-icon nc-briefcase-24",
+    component: CareerPath,
+    layout: "/admin",
+  },
+  {
+    path: "/study",
+    name: "Study Path",
+    icon: "nc-icon nc-ruler-pencil",
+    component: StudyPath,
     layout: "/admin",
   },
 ];

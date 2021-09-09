@@ -18,11 +18,11 @@ import {
   Button,
   Spinner,
 } from "reactstrap";
-import { getAllCourses, getRecommendCareer } from "services/courseService";
+import { getAllCourses, getRecommendCareer } from "services/careerService";
 import { CareerDTO, CourseDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
-import { Career, Course, Job } from "utils/Types";
-import CourseDetails from "components/Recommend/CourseDetails";
+import { Career, Course, CourseItem, Job } from "utils/Types";
+import CourseDetails from "components/Path/CourseDetails";
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
@@ -63,7 +63,9 @@ function Tables() {
     try {
       setLoading("career");
       setJobs([]);
-      const coursesId: number[] = selectedCourses.map((c) => c.id);
+      const coursesId: CourseItem[] = selectedCourses.map((c) => {
+        return { courseId: c.id };
+      });
       const { data } = await getRecommendCareer(coursesId);
       const tmp: Career[] = keysToCamel(data.career_list as CareerDTO);
       setPaths(tmp);
