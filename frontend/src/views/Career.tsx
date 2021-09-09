@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
-
+import SortHeader, { Sort } from "components/Path/SortHeader";
 // reactstrap components
 import {
   Card,
@@ -23,11 +23,19 @@ import { CareerDTO, CourseDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
 import { Career, Course, Job } from "utils/Types";
 import CourseDetails from "components/Path/CourseDetails";
+import useDebounce from "utils/useDebounce";
+
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [jobPage, setJobPage] = useState<number>(1);
+
+  const [sort, setSort] = useState<Sort>({ by: "", order: "" });
+  const [search, setSearch] = useState<string>("");
+  const [isSearch, setIsSearch] = useState<boolean>(false);
+  const [clear, setClear] = useState<boolean>(false);
+  const debounceSort = useDebounce(sort);
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
@@ -39,10 +47,14 @@ function Tables() {
   };
 
   useEffect(() => {
+    if (isSearch) {
+      setIsSearch(false);
+      return;
+    }
     (async () => {
       try {
         setLoading("courses");
-        const { data } = await getAllCourses(page, 10);
+        const { data } = await getAllCourses(page, 10, sort.by, sort.order, search);
         const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
         setCourses(tempCourses);
         setTotal(data.total);
@@ -52,7 +64,7 @@ function Tables() {
         setLoading("");
       }
     })();
-  }, [page]);
+  }, [page, debounceSort]);
 
   const updateSelectedCourses = (course: Course, remove: boolean) => {
     if (remove) {
@@ -85,26 +97,65 @@ function Tables() {
     return false;
   };
 
+  const onSearchCourse = async (reset?: boolean) => {
+    setIsSearch(page !== 1);
+    setClear(!reset);
+    try {
+      setLoading("courses");
+      const { data } = await getAllCourses(1, 10, sort.by, sort.order, reset ? "" : search);
+      const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
+      setCourses(tempCourses);
+      setTotal(data.total);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading("");
+      setPage(1);
+    }
+  };
+
   return (
     <div className="content">
       <Row className="align-items-center mb-2">
         <Col md="6">
           <form>
             <div className="no-border input-group mb-0">
-              <input placeholder="Search course name" type="text" className="form-control" />
+              <input
+                placeholder="Search course title"
+                type="text"
+                className="form-control"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              {clear && (
+                <div className="input-group-append">
+                  <span className="input-group-text">
+                    <i
+                      role="button"
+                      className="fas fa-lg fa-times"
+                      onClick={() => {
+                        setClear(false);
+                        setSearch("");
+                        onSearchCourse(true);
+                      }}
+                    />
+                  </span>
+                </div>
+              )}
             </div>
           </form>
         </Col>
         <Col md="4">
           <div className="d-flex">
-            <Button className="mr-3">Search</Button>
-            <Dropdown isOpen={dropdownOpen} toggle={(e: any) => dropdownToggle(e)}>
-              <DropdownToggle caret>All levels&nbsp;&nbsp;</DropdownToggle>
+            <Button className="mr-3" onClick={() => onSearchCourse()}>
+              Search
+            </Button>
+            {/* <Dropdown isOpen={dropdownOpen} toggle={(e: any) => dropdownToggle(e)}>
+              <DropdownToggle caret>{level}&nbsp;&nbsp;</DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Basic</DropdownItem>
-                <DropdownItem>Advanced</DropdownItem>
+                {["All levels","Basic","Advanced"].map(lv=><DropdownItem key={lv} onClick={(e)=>console.log(e.target)}>{lv}</DropdownItem>)}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </Col>
       </Row>
@@ -119,12 +170,7 @@ function Tables() {
             <CardBody>
               <Table responsive>
                 <thead className="text-primary">
-                  <tr>
-                    <th>Code</th>
-                    <th>Title</th>
-                    <th>Levels</th>
-                    <th>Actions</th>
-                  </tr>
+                  <SortHeader headers={["code", "title", "level", "action"]} sort={sort} setSort={setSort} />
                 </thead>
                 <tbody>
                   {loading === "courses" ? (
