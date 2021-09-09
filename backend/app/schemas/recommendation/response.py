@@ -51,6 +51,7 @@ class MismatchSkillsRecommendationResponse(BaseModel):
 
 
 class SchoolCourse(BaseModel):
+    id: int
     code: str
     title: str
     level: str

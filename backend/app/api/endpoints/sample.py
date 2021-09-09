@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.resources.utils import get_db
 from app.schemas.sample import request, response
 from fastapi_pagination import Params, Page
+from typing import Optional
 from app import crud
 router = APIRouter()
 
@@ -27,10 +28,18 @@ def get_school_courses(
 
 @router.get("/courses", response_model=Page[response.CourseDTO])
 def get_courses(
+        level: Optional[str] = None,
+        sorted_by: Optional[str] = None,
+        order: Optional[str] = None,
         paging_params: Params = Depends(),
         db_session: Session = Depends(get_db),
 ) -> Page[response.CourseDTO]:
-    return crud.course.get(db_session, paging_params=paging_params)
+    filter_dict = {}
+    if level:
+        filter_dict.update({"level": level.upper()})
+    order_asc = False if order and order.lower() == "desc" else True
+    return crud.course.get_by_fields(db_session, order_asc=order_asc,
+                                     paging_params=paging_params, sorted_by=sorted_by, **filter_dict)
 
 
 @router.get("/jobs", response_model=Page[response.JobDTO])
