@@ -57,14 +57,17 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return paginate(query, paging_params) if paging_params else query.all()
 
     def get_by_fields(
-            self, db: Session, order_asc=True, paging_params: Params = None, **kwargs
+            self, db: Session, order_asc=True, paging_params: Params = None, sorted_by: str = None, **kwargs
     ) -> Optional[ModelType]:
         query = db.query(self.model)
         for key, value in kwargs.items():
             if hasattr(self.model, key):
                 query = query.filter(getattr(self.model, key) == value)
+        sorted_attr = getattr(self.model, sorted_by) if sorted_by else self.model.id
         if not order_asc:
-            query = query.order_by(desc(self.model.id))
+            query = query.order_by(desc(sorted_attr))
+        else:
+            query = query.order_by(asc(sorted_attr))
         return paginate(query, paging_params) if paging_params else query.first()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:

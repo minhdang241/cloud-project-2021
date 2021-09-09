@@ -6,3 +6,4 @@ unidecode
 sentence-transformers
 transformers
 pydantic
+scrapy

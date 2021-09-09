@@ -1,6 +1,6 @@
 upsert_job_query = """
-    INSERT INTO "Jobs" (title, company_name, company_location, short_description, description, link, skills, embeddings, career_id, preprocessed_description)
-    VALUES (%(title)s, %(company_name)s, %(company_location)s, %(short_description)s, %(description)s, %(link)s, %(skills)s, %(embeddings)s, %(career_id)s, %(preprocessed_description)s)
+    INSERT INTO "Jobs" (title, company_name, company_location, short_description, description, link, skills, embeddings, career_id, preprocessed_description, career)
+    VALUES (%(title)s, %(company_name)s, %(company_location)s, %(short_description)s, %(description)s, %(link)s, %(skills)s, %(embeddings)s, %(career_id)s, %(preprocessed_description)s, %(career)s)
     ON CONFLICT (link) 
     DO UPDATE 
     SET title = %(title)s,
@@ -12,7 +12,8 @@ upsert_job_query = """
         skills = %(skills)s,
         embeddings = %(embeddings)s,
         career_id = %(career_id)s,
-        preprocessed_description = %(preprocessed_description)s
+        preprocessed_description = %(preprocessed_description)s,
+        career = %(career)s
 """
 
 update_careers_query = """
