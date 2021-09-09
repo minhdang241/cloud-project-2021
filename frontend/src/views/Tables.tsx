@@ -185,7 +185,7 @@ function Tables() {
             </CardHeader>
             <CardBody>
               {selectedCourses.length == 0 ? (
-                <div className="text-muted">Please selecte at least 1 course</div>
+                <div className="text-muted">No course selected</div>
               ) : (
                 selectedCourses.map((course) => (
                   <div key={course.id} className="selected-course">
@@ -235,8 +235,8 @@ function Tables() {
                   <Spinner
                     color="warning"
                     style={{
-                      width: "3rem",
-                      height: "3rem",
+                      width: "2rem",
+                      height: "2rem",
                     }}
                   />
                 </div>

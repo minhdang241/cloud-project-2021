@@ -147,6 +147,12 @@ a.text-gray:hover {
   color: $light-gray !important;
 }
 
+.text-normal,
+a.text-normal:hover,
+a.text-normal:focus {
+  color: #212529;
+}
+
 .blockquote {
   border-left: none;
   border: 1px solid $default-color;

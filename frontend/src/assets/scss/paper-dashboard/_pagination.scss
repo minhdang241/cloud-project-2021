@@ -8,20 +8,20 @@ $pagination-padding-y-lg: 0.75rem !default;
 $pagination-padding-x-lg: 1.5rem !default;
 $pagination-line-height: 1.25 !default;
 
-$pagination-color: $warning-color !default;
+$pagination-color: $primary-color !default;
 $pagination-bg: $white-color !default;
 $pagination-border-width: 1px !default;
 $pagination-border-color: $medium-gray !default;
 
 $pagination-focus-outline: 0 !default;
 
-$pagination-hover-color: $warning-color !default;
+$pagination-hover-color: $primary-color !default;
 $pagination-hover-bg: $light-gray !default;
 $pagination-hover-border-color: $medium-gray !default;
 
 $pagination-active-color: $white-color !default;
-$pagination-active-bg: $warning-color !default;
-$pagination-active-border-color: $warning-color !default;
+$pagination-active-bg: $primary-color !default;
+$pagination-active-border-color: $primary-color !default;
 
 .pagination {
   display: flex;
