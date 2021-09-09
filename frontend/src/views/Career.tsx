@@ -237,7 +237,7 @@ function Tables() {
       </Row>
       <Row>
         <Col sm="3">
-          <Card Card className="card-stretch">
+          <Card className="card-stretch">
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
                 Career Path

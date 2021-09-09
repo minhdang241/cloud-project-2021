@@ -3,6 +3,7 @@ import {
   CareerOptionDTO,
   CourseDTO,
   CourseItemDTO,
+  CourseLevelDTO,
   CourseParamsDTO,
   JobDTO,
   KeysToCamelCase,
@@ -22,3 +23,4 @@ export type Job = KeysToCamelCase<JobDTO>;
 export type CourseParams = KeysToCamelCase<CourseParamsDTO>;
 export type SkillParams = KeysToCamelCase<SkillParamsDTO>;
 export type Skill = KeysToCamelCase<SkillDTO>;
+export type CourseLevel = KeysToCamelCase<CourseLevelDTO>;

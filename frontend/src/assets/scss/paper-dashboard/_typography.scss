@@ -153,6 +153,12 @@ a.text-normal:focus {
   color: #212529;
 }
 
+.text-white,
+a.text-white:hover,
+a.text-white:focus {
+  color: #fff;
+}
+
 .blockquote {
   border-left: none;
   border: 1px solid $default-color;

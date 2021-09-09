@@ -61,3 +61,8 @@ export type SkillDTO = {
   missing_skills: KeysToCamelCase<SkillItemDTO>[];
   matching_skills: KeysToCamelCase<SkillItemDTO>[];
 };
+
+export type CourseLevelDTO = {
+  level: string;
+  count: number;
+};

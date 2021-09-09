@@ -241,13 +241,13 @@ function StudyPath() {
       </Row>
       <Row>
         <Col sm="4">
-          <Card Card className="card-stretch">
+          <Card style={{ maxHeight: "70vh" }}>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
                 Matching Skills
               </CardTitle>
             </CardHeader>
-            <CardBody>
+            <CardBody style={{ overflowY: "auto", height: "95%", overflowX: "hidden" }}>
               {skills.matchingSkills.length == 0 ? (
                 <div className="text-muted">No matching skills</div>
               ) : (
@@ -265,13 +265,13 @@ function StudyPath() {
           </Card>
         </Col>
         <Col sm="4">
-          <Card Card className="card-stretch">
+          <Card style={{ maxHeight: "70vh" }}>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
                 Missing Skills
               </CardTitle>
             </CardHeader>
-            <CardBody>
+            <CardBody style={{ overflowY: "auto", height: "95%", overflowX: "hidden" }}>
               {skills.missingSkills.length == 0 ? (
                 <div className="text-muted">No missing skills</div>
               ) : (
@@ -289,13 +289,13 @@ function StudyPath() {
           </Card>
         </Col>
         <Col sm="4">
-          <Card Card className="card-stretch">
+          <Card style={{ maxHeight: "70vh" }}>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
                 Recommend Courses
               </CardTitle>
             </CardHeader>
-            <CardBody>
+            <CardBody style={{ overflowY: "auto", height: "95%", overflowX: "hidden" }}>
               {recommendCourses.length == 0 ? (
                 <div className="text-muted">No course available</div>
               ) : (
