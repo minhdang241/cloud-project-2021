@@ -20,3 +20,12 @@ def connect_psycopg2():
         host=settings.POSTGRES_HOST,
         port=settings.POSTGRES_PORT,
     )
+
+
+def get_keyword_query(keyword: str) -> str:
+    if "*" in keyword or "_" in keyword:
+        keyword_query = keyword.replace(
+            "_", "__").replace("*", "%").replace("?", "_")
+    else:
+        keyword_query = "%{0}%".format(keyword)
+    return keyword_query
