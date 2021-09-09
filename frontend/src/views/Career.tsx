@@ -26,6 +26,7 @@ import CourseDetails from "components/Path/CourseDetails";
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
   const [jobPage, setJobPage] = useState<number>(1);
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
@@ -44,6 +45,7 @@ function Tables() {
         const { data } = await getAllCourses(page, 10);
         const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
         setCourses(tempCourses);
+        setTotal(data.total);
       } catch (error) {
         console.error(error);
       } finally {
@@ -52,8 +54,8 @@ function Tables() {
     })();
   }, [page]);
 
-  const updateSelectedCourses = (course: Course) => {
-    if (selectedCourses.includes(course)) {
+  const updateSelectedCourses = (course: Course, remove: boolean) => {
+    if (remove) {
       const tmp: Course[] = selectedCourses.filter((c) => c.id !== course.id);
       setSelectedCourses(tmp);
     } else setSelectedCourses([...selectedCourses, course]);
@@ -74,6 +76,13 @@ function Tables() {
     } finally {
       setLoading("");
     }
+  };
+
+  const isSelected = (id: number): boolean => {
+    if (selectedCourses.findIndex((c) => c.id == id) > -1) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -137,37 +146,40 @@ function Tables() {
                       </td>
                     </tr>
                   ) : (
-                    courses.map((course) => (
-                      <tr key={course.id}>
-                        <td>{course.code}</td>
-                        <td>{course.title}</td>
-                        <td>{course.level === "ADVANCED" ? "Advanced" : "Basic"}</td>
-                        <td>
-                          <CourseDetails course={course} />
-                          <Button
-                            title="Select course"
-                            size="sm"
-                            color={selectedCourses.includes(course) ? "danger" : "warning"}
-                            className="p-1 ml-3"
-                            onClick={() => updateSelectedCourses(course)}
-                          >
-                            {selectedCourses.includes(course) ? (
-                              <i className="fas fa-lg fa-minus"></i>
-                            ) : (
-                              <i className="fas fa-lg fa-plus"></i>
-                            )}
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
+                    courses.map((course) => {
+                      const selected: boolean = isSelected(course.id);
+                      return (
+                        <tr key={course.id}>
+                          <td>{course.code}</td>
+                          <td>{course.title}</td>
+                          <td>{course.level === "ADVANCED" ? "Advanced" : "Basic"}</td>
+                          <td>
+                            <CourseDetails course={course} />
+                            <Button
+                              title="Select course"
+                              size="sm"
+                              color={selected ? "danger" : "warning"}
+                              className="p-1 ml-3"
+                              onClick={() => updateSelectedCourses(course, selected)}
+                            >
+                              {selected ? (
+                                <i className="fas fa-lg fa-minus"></i>
+                              ) : (
+                                <i className="fas fa-lg fa-plus"></i>
+                              )}
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </Table>
-              {courses.length > 10 && (
+              {total > 10 && (
                 <div className="d-flex justify-content-end">
                   <Pagination
                     activePage={page}
-                    totalItemsCount={courses.length}
+                    totalItemsCount={total}
                     pageRangeDisplayed={5}
                     onChange={(pageNumber) => setPage(pageNumber)}
                     itemClass="page-item-ow"
@@ -195,7 +207,7 @@ function Tables() {
                     <i
                       role="button"
                       className="fas fa-lg fa-times text-gray"
-                      onClick={() => updateSelectedCourses(course)}
+                      onClick={() => updateSelectedCourses(course, true)}
                     ></i>
                   </div>
                 ))
