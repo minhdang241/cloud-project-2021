@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-          <Redirect to="/admin/dashboard" />
+          <Redirect to="/admin/career" />
         </Switch>
       </BrowserRouter>
     </div>
