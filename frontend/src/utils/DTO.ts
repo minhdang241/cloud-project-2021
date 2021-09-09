@@ -18,3 +18,16 @@ export type CourseDTO = {
   outcome: string;
   level: "BASIC" | "ADVANCED";
 };
+
+export type JobDTO = {
+  title: string;
+  company_name: string;
+  company_location: string;
+  short_description: string;
+  link: string;
+};
+
+export type CareerDTO = {
+  career: string;
+  job_list: KeysToCamelCase<JobDTO>[];
+};

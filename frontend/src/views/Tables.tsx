@@ -19,16 +19,19 @@ import {
   Spinner,
 } from "reactstrap";
 import { getAllCourses, getRecommendCareer } from "services/courseService";
-import { CourseDTO } from "utils/DTO";
+import { CareerDTO, CourseDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
-import { Course } from "utils/Types";
+import { Career, Course, Job } from "utils/Types";
 import CourseDetails from "components/Recommend/CourseDetails";
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
-
+  const [jobPage, setJobPage] = useState<number>(1);
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+
+  const [paths, setPaths] = useState<Career[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<string>("");
   const dropdownToggle = (e: any) => {
     setDropdownOpen(!dropdownOpen);
@@ -59,11 +62,15 @@ function Tables() {
   const handleGetRecCareer = async () => {
     try {
       setLoading("career");
+      setJobs([]);
       const coursesId: number[] = selectedCourses.map((c) => c.id);
       const { data } = await getRecommendCareer(coursesId);
-      console.log(data);
+      const tmp: Career[] = keysToCamel(data.career_list as CareerDTO);
+      setPaths(tmp);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading("");
     }
   };
 
@@ -121,6 +128,12 @@ function Tables() {
                         />
                       </td>
                     </tr>
+                  ) : courses.length == 0 ? (
+                    <tr>
+                      <td colSpan={4} className="text-muted">
+                        No course available
+                      </td>
+                    </tr>
                   ) : (
                     courses.map((course) => (
                       <tr key={course.id}>
@@ -152,11 +165,11 @@ function Tables() {
                 <div className="d-flex justify-content-end">
                   <Pagination
                     activePage={page}
-                    totalItemsCount={10}
+                    totalItemsCount={courses.length}
                     pageRangeDisplayed={5}
                     onChange={(pageNumber) => setPage(pageNumber)}
-                    itemClass="page-item"
-                    linkClass="page-link"
+                    itemClass="page-item-ow"
+                    linkClass="page-link-ow"
                   />
                 </div>
               )}
@@ -164,7 +177,7 @@ function Tables() {
           </Card>
         </Col>
         <Col sm="12" xl="3">
-          <Card>
+          <Card className="card-stretch">
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
                 Selected Courses
@@ -196,41 +209,107 @@ function Tables() {
                 >
                   Clear
                 </Button>
-                <Button disabled={!selectedCourses[0]} color="primary" onClick={handleGetRecCareer}>
-                  Get recommendation
+                <Button
+                  disabled={!selectedCourses[0] || loading == "career"}
+                  color="primary"
+                  onClick={handleGetRecCareer}
+                >
+                  Get Path
                 </Button>
               </div>
             </CardFooter>
           </Card>
         </Col>
       </Row>
-      <Card>
-        <CardHeader>
-          <CardTitle className="mb-0" tag="h5">
-            Career Path
-          </CardTitle>
-        </CardHeader>
-        <CardBody>
-          <Table responsive>
-            <thead className="text-primary">
-              <tr>
-                <th>Job Name</th>
-                <th>Desciption</th>
-                <th>Company</th>
-                <th>Salary</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Dakota Rice</td>
-                <td>Niger</td>
-                <td>Oud-Turnhout</td>
-                <td>$36,738</td>
-              </tr>
-            </tbody>
-          </Table>
-        </CardBody>
-      </Card>
+      <Row>
+        <Col sm="3">
+          <Card Card className="card-stretch">
+            <CardHeader>
+              <CardTitle className="mb-0" tag="h5">
+                Career Path
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              {loading == "career" ? (
+                <div className="text-center py-5">
+                  <Spinner
+                    color="warning"
+                    style={{
+                      width: "3rem",
+                      height: "3rem",
+                    }}
+                  />
+                </div>
+              ) : paths.length == 0 ? (
+                <div className="text-muted">No recommendation</div>
+              ) : (
+                paths.map((path, id) => (
+                  <div key={id} className="selected-course" onClick={() => setJobs(path.jobList)}>
+                    <div role="button">{path.career}</div>
+                  </div>
+                ))
+              )}
+            </CardBody>
+          </Card>
+        </Col>
+        <Col sm="12" xl="9">
+          <Card>
+            <CardHeader>
+              <CardTitle tag="h5" className="mb-0">
+                Practical jobs
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Table responsive>
+                <thead className="text-primary">
+                  <tr>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {jobs.length == 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-muted">
+                        No path selected
+                      </td>
+                    </tr>
+                  ) : (
+                    jobs.slice((jobPage - 1) * 10, jobPage * 10).map((job, id) => (
+                      <tr key={id}>
+                        <td>{job.title}</td>
+                        <td>{job.companyName}</td>
+                        <td>{job.companyLocation}</td>
+                        <td title={job.shortDescription}>{job.shortDescription.slice(0, 50)}...</td>
+                        <td>
+                          <a href={job.link} target="_blank" rel="noreferrer">
+                            View
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </Table>
+              {jobs.length > 10 && (
+                <div className="d-flex justify-content-end">
+                  <Pagination
+                    activePage={jobPage}
+                    totalItemsCount={jobs.length}
+                    pageRangeDisplayed={5}
+                    onChange={(pageNumber) => setJobPage(pageNumber)}
+                    itemClass="page-item-ow"
+                    linkClass="page-link-ow"
+                  />
+                </div>
+              )}
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 }
