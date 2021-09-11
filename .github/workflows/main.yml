@@ -42,7 +42,7 @@ jobs:
             - name: Docker build and push backend image
               if: steps.filter.outputs.backend == 'true'
               run: |
-                  docker build . --file backend/Dockerfile --tag ${{ env.IMAGE_REGISTRY }}/cloud-2021-backend:${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
+                  docker build ./backend/ --file backend/Dockerfile --tag ${{ env.IMAGE_REGISTRY }}/cloud-2021-backend:${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
                   echo ${{ env.IMAGE_REGISTRY }}/cloud-2021-backend:${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
                   docker push ${{ env.IMAGE_REGISTRY }}/cloud-2021-backend:${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
 
