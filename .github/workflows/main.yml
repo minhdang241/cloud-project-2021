@@ -37,14 +37,15 @@ jobs:
             # Run only if backend files were changed
             - name: Build and push backend image
               if: steps.filter.outputs.backend == 'true'
+              uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
               with:
                   context: ./backend/
                   push: true
                   tags: ${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
 
             - name: Update BACKEND MINOR version
-              uses: hmanzur/actions-set-secret@v2.0.0
               if: steps.filter.outputs.backend == 'true'
+              uses: hmanzur/actions-set-secret@v2.0.0
               with:
                 name: 'BACKEND_MINOR'
                 value: $((${{ secrets.BACKEND_MINOR }}+1))
@@ -54,12 +55,14 @@ jobs:
             # Run only if frontend files were changed
             - name: Build and push frontend image
               if: steps.filter.outputs.frontend == 'true'
+              uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
               with:
                   context: ./frontend/
                   push: true
                   tags: ${{ secrets.FRONTEND_MAJOR }}.${{ secrets.FRONTEND_MINOR }}
 
             - name: Update FRONTEND MINOR version
+              if: steps.filter.outputs.frontend == 'true'
               uses: hmanzur/actions-set-secret@v2.0.0
               with:
                 name: 'FRONTEND_MINOR'
@@ -77,6 +80,7 @@ jobs:
                   tags: ${{ secrets.CRAWLER_MAJOR }}.${{ secrets.CRAWLER_MINOR }}
 
             - name: Update CRAWLER MINOR version
+              if: steps.filter.outputs.crawler == 'true'
               uses: hmanzur/actions-set-secret@v2.0.0
               with:
                 name: 'CRAWLER_MINOR'
