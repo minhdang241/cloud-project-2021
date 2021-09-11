@@ -39,13 +39,12 @@ jobs:
                   password: ${{ secrets.DOCKER_PASSWORD }}
             
             # Run only if backend files were changed
-            - name: Build and push backend image
+            - name: Docker build and push backend image
               if: steps.filter.outputs.backend == 'true'
-              uses: docker/build-push-action@v2
-              with:
-                  context: ./backend/
-                  push: true
-                  tags: ${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
+              run: |
+                  docker build . --file backend/Dockerfile --tag ${{IMAGE_REGISTRY}}/cloud-2021-backend:${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
+                  echo ${{IMAGE_REGISTRY}}/cloud-2021-backend:${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
+                  docker push ${{IMAGE_REGISTRY}}/cloud-2021-backend:${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
 
             - name: Update BACKEND MINOR version
               if: steps.filter.outputs.backend == 'true'
