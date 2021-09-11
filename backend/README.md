@@ -1,24 +1,35 @@
 # How to run
+## Run docker
+```angular2html
+# 1. Install docker
 
+# 2. Build image
+docker build -t cloud-computing-backend .
+
+# 3. Run container
+docker run -p 8000:8000 cloud-computing-backend
+```
+
+## Run local
 Refer to (https://docs.conda.io/en/latest/miniconda.html#linux-installers) to set up conda.
 
 ```
 # 1. Create or use exist virtual environment using conda
-conda create --name slsops python=3.7
+conda create --name cloud python=3.7
 or
 conda activate slsops 
 
 # 2. Install requirements.txt 
 pip install -r requirements.txt
 
-# 3. Port forward postgres database from cloud cluster
-kubectl port-forward pods/postgres-postgresql-primary-0 10000:5432 -n postgres
+# 3. Install torch
+pip install torch==1.9.0+cpu torchvision==0.10.0+cpu torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
-# 4. Export pythonpath in backend folder
-export PYTHONPATH=$PWD
+# 4. Install transformer
+pip install sentence-transformers
 
 # 5. Run the main.py to start the backend
-python3 app/main.py
+python app/main.py
 
 ```
 

@@ -56,8 +56,8 @@ def get_careers(
     return crud.career.get(db_session, paging_params=paging_params)
 
 
-@router.get("/courses/types")
-def get_course_type(
+@router.get("/courses/levels")
+def get_course_level(
         db_session: Session = Depends(get_db)
 ):
     return crud.course.get_course_level_count(db_session)

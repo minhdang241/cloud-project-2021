@@ -19,6 +19,7 @@ class Course(Base):
     code = Column(String)
     title = Column(String)
     description = Column(String)
+    preprocessed_description = Column(String)
     outcome = Column(String)
     level = Column(course_level_type)
     skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
@@ -32,10 +33,11 @@ class Job(Base):
     company_location = Column(String)
     short_description = Column(String)
     description = Column(String)
-    link = Column(String)
+    link = Column(String, unique=True)
     skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
     embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))
     career_id = Column(Integer, ForeignKey("Careers.career_id"))
+    career = Column(career_type)
     preprocessed_description = Column(String)
 
 
@@ -43,5 +45,5 @@ class Career(Base):
     career_path = Column(career_type)
     skills = Column("skills", mutable_json_type(dbtype=JSONB, nested=True))
     total_jobs = Column(Integer)
-    jobs = relationship("Job", cascade="delete", backref="career")
+    jobs = relationship("Job", cascade="delete", backref="job_career")
     embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))

@@ -21,7 +21,7 @@ def get_recommended_careers(
     results = recommendation.get_recommended_jobs(db_session, course_ids, topk=topk)
     hash_map = defaultdict(list)
     for job in results:
-        hash_map[job.career.career_path].append(response.Job(**job.__dict__))
+        hash_map[job.job_career.career_path].append(response.Job(**job.__dict__))
 
     career_list = []
     for career_path, jobs in hash_map.items():
