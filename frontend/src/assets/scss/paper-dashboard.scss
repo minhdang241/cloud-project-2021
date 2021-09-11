@@ -1,5 +1,5 @@
-@import 'paper-dashboard/variables';
-@import 'paper-dashboard/mixins';
+@import "paper-dashboard/variables";
+@import "paper-dashboard/mixins";
 
 // Plugins CSS
 @import "paper-dashboard/plugins/plugin-animate-bootstrap-notify";
@@ -12,7 +12,6 @@
 @import "paper-dashboard/misc";
 @import "paper-dashboard/checkboxes-radio";
 
-
 // components
 @import "paper-dashboard/navbar";
 @import "paper-dashboard/page-header";
@@ -23,6 +22,7 @@
 @import "paper-dashboard/tables";
 @import "paper-dashboard/sidebar-and-main-panel";
 @import "paper-dashboard/footers";
+@import "paper-dashboard/pagination";
 
 // cards
 @import "paper-dashboard/cards";

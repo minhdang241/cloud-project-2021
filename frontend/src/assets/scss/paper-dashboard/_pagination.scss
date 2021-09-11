@@ -1,0 +1,86 @@
+// Pagination
+
+$pagination-padding-y: 0.5rem !default;
+$pagination-padding-x: 0.75rem !default;
+$pagination-padding-y-sm: 0.25rem !default;
+$pagination-padding-x-sm: 0.5rem !default;
+$pagination-padding-y-lg: 0.75rem !default;
+$pagination-padding-x-lg: 1.5rem !default;
+$pagination-line-height: 1.25 !default;
+
+$pagination-color: $primary-color !default;
+$pagination-bg: $white-color !default;
+$pagination-border-width: 1px !default;
+$pagination-border-color: $medium-gray !default;
+
+$pagination-focus-outline: 0 !default;
+
+$pagination-hover-color: $primary-color !default;
+$pagination-hover-bg: $light-gray !default;
+$pagination-hover-border-color: $medium-gray !default;
+
+$pagination-active-color: $white-color !default;
+$pagination-active-bg: $primary-color !default;
+$pagination-active-border-color: $primary-color !default;
+
+.pagination {
+  display: flex;
+//   @include list-unstyled();
+//   @include border-radius();
+}
+
+.page-link-ow {
+  position: relative;
+  display: block;
+  padding: $pagination-padding-y $pagination-padding-x;
+  margin-left: -$pagination-border-width;
+  line-height: $pagination-line-height;
+  color: $pagination-color;
+  text-decoration: none;
+  background-color: $pagination-bg;
+  border: $pagination-border-width solid $pagination-border-color;
+
+  &:hover {
+    z-index: 2;
+    color: $pagination-hover-color;
+    text-decoration: none;
+    background-color: $pagination-hover-bg;
+    border-color: $pagination-hover-border-color;
+  }
+
+  &:focus {
+    z-index: 3;
+    outline: $pagination-focus-outline;
+  }
+}
+
+.page-item-ow {
+  &:first-child {
+    .page-link-ow {
+      margin-left: 0;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+  }
+  &:last-child {
+    .page-link-ow {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+  }
+
+  &.active .page-link-ow {
+    z-index: 3;
+    color: $pagination-active-color;
+    background-color: $pagination-active-bg;
+    border-color: $pagination-active-border-color;
+  }
+
+  &.disabled .page-link-ow {
+    color: $link-disabled-color;
+    pointer-events: none;
+    // Opinionated: remove the "hand" cursor set previously for .page-link
+    cursor: auto;
+  }
+}
+

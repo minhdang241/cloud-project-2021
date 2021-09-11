@@ -109,8 +109,13 @@
 
 
         .stats{
+            border-top: 1px solid rgba(0, 0, 0, 0.15);
+            padding-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             i{
-                margin-right: 5px;
+                margin: 5px;
                 position: relative;
                 top: 0px;
                 color: $default-color;
