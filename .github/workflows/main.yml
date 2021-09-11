@@ -28,16 +28,20 @@ jobs:
                   crawler:
                       - 'crawler/**'
 
+            # be able to build multi-platform images, export cache, etc.
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+
             - name: Login to Docker Hub
-              uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+              uses: docker/login-action@v1 
               with:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
-
+            
             # Run only if backend files were changed
             - name: Build and push backend image
               if: steps.filter.outputs.backend == 'true'
-              uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+              uses: docker/build-push-action@v2
               with:
                   context: ./backend/
                   push: true
@@ -55,7 +59,7 @@ jobs:
             # Run only if frontend files were changed
             - name: Build and push frontend image
               if: steps.filter.outputs.frontend == 'true'
-              uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+              uses: docker/build-push-action@v2
               with:
                   context: ./frontend/
                   push: true
@@ -73,7 +77,7 @@ jobs:
             # Run only if crawler files were changed
             - name: Build and push crawler image
               if: steps.filter.outputs.crawler == 'true'
-              uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+              uses: docker/build-push-action@v2
               with:
                   context: ./crawler/
                   push: true
