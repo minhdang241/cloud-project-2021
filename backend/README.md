@@ -8,7 +8,7 @@
 # 2. Build image
 docker build -t mindang241/cloud-2021-backend .
 
-# 3. Run docker compose
+# 3. Run docker-compose
 docker compose up
 ```
 
