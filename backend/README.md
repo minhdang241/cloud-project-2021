@@ -166,13 +166,3 @@ To be updated
 # Libraries
 
 - pydantic: a validation and parsing library which maps your data to a Python class.
-
-# Jargons
-
-- The `app` directory has an empty file `app/__init__.py`, which makes the directory a "Python package" (a collection
-  of "Python modules") ("Python modules" are all the python files, .e.g. `main.py`).
-
-- The `api` directory also has an empty file `__init__.py`, which makes it a "Python subpackage". The files inside this
-  directory are called submodules.
-
-
