@@ -1,16 +1,19 @@
 # How to run
+
 ## Run docker
-```angular2html
+
+```
 # 1. Install docker
 
 # 2. Build image
-docker build -t cloud-computing-backend .
+docker build -t mindang241/cloud-2021-backend .
 
 # 3. Run container
-docker run -p 8000:8000 cloud-computing-backend
+docker compose up
 ```
 
 ## Run local
+
 Refer to (https://docs.conda.io/en/latest/miniconda.html#linux-installers) to set up conda.
 
 ```
@@ -38,7 +41,6 @@ python app/main.py
 # Features
 
 Endpoint documentation is available in `/docs` or `/redoc` (eg. `https://backend.slsops.athenka.com/docs`)
-
 
 # Authentication
 
