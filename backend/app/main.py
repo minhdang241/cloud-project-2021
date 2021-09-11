@@ -49,7 +49,7 @@ app = get_application()
 
 @app.get("/healthy")
 def test_server():
-    return {"status": "Up"}
+    return {"status": "Backend server is up"}
 
 
 add_pagination(app)
