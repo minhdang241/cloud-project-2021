@@ -68,7 +68,7 @@ def get_recommended_mismatch_skills(db_session: Session, course_ids: List[int], 
 
 def get_recommended_jobs(db_session: Session, data: List[int], topk: int = None) -> List[models.Job]:
     courses = course.filter_by(db_session, order_desc=True, id=data)
-    logger.debug(courses)
+    logger.debug(topk)
 
     c_embed = calculate_course_embeddings(courses)
     logger.debug(f"Embedding length {len(c_embed)}")
@@ -85,8 +85,10 @@ def get_recommended_jobs(db_session: Session, data: List[int], topk: int = None)
         score = similarity_score * 0.6 + matching_skill_score * 0.4
         scores.append((j, score))
     scores.sort(key=lambda t: t[1], reverse=True)
+    logger.debug(len(scores))
     if topk:
         scores = scores[:topk]
+    logger.debug(len(scores))
     jobs = [t[0] for t in scores]
     return jobs
 

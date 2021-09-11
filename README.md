@@ -1,3 +1,5 @@
-# cloud-project-2021 
-
-Cùng qua môn nhá 👌👌👌👌
+# Features
+## CI/CD setup
+CI/CD pipeline is setup for the application using Github Action and AWSCodeDeploy.
+## Backend
+Updating...

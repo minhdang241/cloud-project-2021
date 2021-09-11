@@ -1,0 +1,112 @@
+name: CI/CD Pipeline
+on: 
+    push:
+        branches: 
+            - 'main'
+    pull_request:
+        branches: 
+            - 'main'
+env:
+    IMAGE_REGISTRY: mindang241
+jobs:
+    continuous-integration:
+        runs-on: ubuntu-latest
+        steps:
+            # Step 1
+            - name: Checkout the repo and copy it to the runner
+              uses: actions/checkout@v2
+              
+            - name: Detect changes in subfolders
+              uses: dorny/paths-filter@v2
+              id: filter
+              with: 
+                filters: |
+                  backend:
+                      - 'backend/**'
+                  frontend:
+                      - 'frontend/**'
+                  crawler:
+                      - 'crawler/**'
+
+            - name: Login to Docker Hub
+              uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            # Run only if backend files were changed
+            - name: Build and push backend image
+              if: steps.filter.outputs.backend == 'true'
+              with:
+                  context: ./backend/
+                  push: true
+                  tags: ${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}
+
+            - name: Update BACKEND MINOR version
+              uses: hmanzur/actions-set-secret@v2.0.0
+              if: steps.filter.outputs.backend == 'true'
+              with:
+                name: 'BACKEND_MINOR'
+                value: $((${{ secrets.BACKEND_MINOR }}+1))
+                repository: minhdang241/cloud-project-2021 
+                token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+            # Run only if frontend files were changed
+            - name: Build and push frontend image
+              if: steps.filter.outputs.frontend == 'true'
+              with:
+                  context: ./frontend/
+                  push: true
+                  tags: ${{ secrets.FRONTEND_MAJOR }}.${{ secrets.FRONTEND_MINOR }}
+
+            - name: Update FRONTEND MINOR version
+              uses: hmanzur/actions-set-secret@v2.0.0
+              with:
+                name: 'FRONTEND_MINOR'
+                value: $((${{ secrets.FRONTEND_MINOR }}+1))
+                repository: minhdang241/cloud-project-2021 
+                token: ${{ secrets.REPO_ACCESS_TOKEN }}
+                      
+            # Run only if crawler files were changed
+            - name: Build and push crawler image
+              if: steps.filter.outputs.crawler == 'true'
+              uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+              with:
+                  context: ./crawler/
+                  push: true
+                  tags: ${{ secrets.CRAWLER_MAJOR }}.${{ secrets.CRAWLER_MINOR }}
+
+            - name: Update CRAWLER MINOR version
+              uses: hmanzur/actions-set-secret@v2.0.0
+              with:
+                name: 'CRAWLER_MINOR'
+                value: $((${{ secrets.CRAWLER_MINOR }}+1))
+                repository: minhdang241/cloud-project-2021 
+                token: ${{ secrets.REPO_ACCESS_TOKEN }}
+           
+    # continuous-deployment:
+    #     runs-on: ubuntu-lastest
+    #     needs: [continuous-integration]
+    #     if: github.ref == 'refs/heads/main'
+    #     steps:
+    #         # Step 1
+    #         - name: Configure AWS credentials
+    #           uses: aws-actions/configure-aws-credentials@v1
+    #           with:
+    #               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #               aws-region: ${{ secrets.AWS_REGION }}
+
+    #         # Step 2 
+    #         - name: Create CodeDeploy Deployment
+    #           id: deploy
+    #           run: |
+    #               aws deploy create-deployment \
+    #                 --application-name Git_Application \
+    #                 --deployment-group-name development_group \
+    #                 --deployment-config-name CodeDeployDefault.OneAtATime \
+    #                 --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+
+
+
+
