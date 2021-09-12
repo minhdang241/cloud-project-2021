@@ -1,11 +1,8 @@
 autopep8
-isort
 fastapi-pagination
 pydantic
 python-dotenv
 SQLAlchemy
 starlette
-pylint==2.8.2
-python-keycloak==0.24.0
 psycopg2-binary==2.8.6
 sqlalchemy-json==0.4.0

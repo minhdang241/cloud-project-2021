@@ -45,6 +45,13 @@ def get_application() -> FastAPI:
 
 
 app = get_application()
+
+
+@app.get("/healthy")
+def test_server():
+    return {"status": "Backend server is up"}
+
+
 add_pagination(app)
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", reload=True)

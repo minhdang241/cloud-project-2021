@@ -1,24 +1,38 @@
 # How to run
 
+## Run docker
+
+```
+# 1. Install docker
+
+# 2. Build image
+docker build -t mindang241/cloud-2021-backend .
+
+# 3. Run docker-compose
+docker compose up
+```
+
+## Run local
+
 Refer to (https://docs.conda.io/en/latest/miniconda.html#linux-installers) to set up conda.
 
 ```
 # 1. Create or use exist virtual environment using conda
-conda create --name slsops python=3.7
+conda create --name cloud python=3.7
 or
 conda activate slsops 
 
 # 2. Install requirements.txt 
 pip install -r requirements.txt
 
-# 3. Port forward postgres database from cloud cluster
-kubectl port-forward pods/postgres-postgresql-primary-0 10000:5432 -n postgres
+# 3. Install torch
+pip install torch==1.9.0+cpu torchvision==0.10.0+cpu torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
-# 4. Export pythonpath in backend folder
-export PYTHONPATH=$PWD
+# 4. Install transformer
+pip install sentence-transformers
 
 # 5. Run the main.py to start the backend
-python3 app/main.py
+python app/main.py
 
 ```
 
@@ -27,7 +41,6 @@ python3 app/main.py
 # Features
 
 Endpoint documentation is available in `/docs` or `/redoc` (eg. `https://backend.slsops.athenka.com/docs`)
-
 
 # Authentication
 
@@ -153,13 +166,3 @@ To be updated
 # Libraries
 
 - pydantic: a validation and parsing library which maps your data to a Python class.
-
-# Jargons
-
-- The `app` directory has an empty file `app/__init__.py`, which makes the directory a "Python package" (a collection
-  of "Python modules") ("Python modules" are all the python files, .e.g. `main.py`).
-
-- The `api` directory also has an empty file `__init__.py`, which makes it a "Python subpackage". The files inside this
-  directory are called submodules.
-
-
