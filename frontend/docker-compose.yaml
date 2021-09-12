@@ -1,0 +1,8 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: mindang241/cloud-2021-frontend:0.1
+    ports:
+      - "3000:80"
+
