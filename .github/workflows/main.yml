@@ -98,7 +98,10 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ${{ secrets.AWS_REGION }}
-
+            
+            - name: Checkout the repo and copy it to the runner
+              uses: actions/checkout@v2
+            
             - name: Detect changes in subfolders
               uses: dorny/paths-filter@v2
               id: filter
