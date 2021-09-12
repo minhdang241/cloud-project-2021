@@ -108,12 +108,9 @@ jobs:
                       - 'backend/**'
                   frontend:
                       - 'frontend/**'
-                  crawler:
-                      - 'crawler/**'
 
             - name: Invoke Lambda function to deploy BE
               if: steps.filter.outputs.backend == 'true'
-              id: deploy
               run: |
                 aws lambda invoke \
                     --function-name deploy_app  \
@@ -123,7 +120,6 @@ jobs:
             
             - name: Invoke Lambda function to deploy FE
               if: steps.filter.outputs.frontend == 'true'
-              id: deploy
               run: |
                 aws lambda invoke \
                     --function-name deploy_app  \
