@@ -87,28 +87,49 @@ jobs:
                 repository: minhdang241/cloud-project-2021 
                 token: ${{ secrets.REPO_ACCESS_TOKEN }}
            
-    # continuous-deployment:
-    #     runs-on: ubuntu-lastest
-    #     needs: [continuous-integration]
-    #     if: github.ref == 'refs/heads/main'
-    #     steps:
-    #         # Step 1
-    #         - name: Configure AWS credentials
-    #           uses: aws-actions/configure-aws-credentials@v1
-    #           with:
-    #               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #               aws-region: ${{ secrets.AWS_REGION }}
+    continuous-deployment:
+        runs-on: ubuntu-latest
+        needs: [continuous-integration]
+        if: github.ref == 'refs/heads/main'
+        steps:
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
 
-    #         # Step 2 
-    #         - name: Create CodeDeploy Deployment
-    #           id: deploy
-    #           run: |
-    #               aws deploy create-deployment \
-    #                 --application-name Git_Application \
-    #                 --deployment-group-name development_group \
-    #                 --deployment-config-name CodeDeployDefault.OneAtATime \
-    #                 --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+            - name: Detect changes in subfolders
+              uses: dorny/paths-filter@v2
+              id: filter
+              with: 
+                filters: |
+                  backend:
+                      - 'backend/**'
+                  frontend:
+                      - 'frontend/**'
+                  crawler:
+                      - 'crawler/**'
+
+            - name: Invoke Lambda function to deploy BE
+              if: steps.filter.outputs.backend == 'true'
+              id: deploy
+              run: |
+                aws lambda invoke \
+                    --function-name deploy_app  \
+                    --cli-binary-format raw-in-base64-out \
+                    --payload '{"component": "backend", "image_tag": "${{ secrets.BACKEND_MAJOR }}.${{ secrets.BACKEND_MINOR }}"}' \
+                    response.json
+            
+            - name: Invoke Lambda function to deploy FE
+              if: steps.filter.outputs.frontend == 'true'
+              id: deploy
+              run: |
+                aws lambda invoke \
+                    --function-name deploy_app  \
+                    --cli-binary-format raw-in-base64-out \
+                    --payload '{"component": "frontend", "image_tag": "${{ secrets.FRONTEND_MAJOR }}.${{ secrets.FRONTEND_MINOR }}"}' \
+                    response.json
 
 
 
