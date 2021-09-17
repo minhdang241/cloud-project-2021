@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 import SortHeader, { Sort } from "components/Path/SortHeader";
 // reactstrap components
@@ -118,7 +118,7 @@ function Tables() {
     <div className="content">
       <Row className="align-items-center mb-2">
         <Col md="6">
-          <form>
+          <form onSubmit={e => e.preventDefault()}>
             <div className="no-border input-group mb-0">
               <input
                 placeholder="Search course title"
@@ -126,6 +126,13 @@ function Tables() {
                 className="form-control"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+              
+                    onSearchCourse();
+                  }
+                }}
               />
               {clear && (
                 <div className="input-group-append">

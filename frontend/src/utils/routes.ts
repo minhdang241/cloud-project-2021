@@ -2,6 +2,7 @@ import Dashboard from "views/Dashboard";
 import CareerPath from "views/Career";
 import UserPage from "views/User";
 import StudyPath from "views/Study";
+import RecommendView from "views/RecommendView";
 
 const routes = [
   {
@@ -23,6 +24,13 @@ const routes = [
     name: "Career Path",
     icon: "nc-icon nc-briefcase-24",
     component: CareerPath,
+    layout: "/admin",
+  },
+  {
+    path: "/recommend",
+    name: "Recommend",
+    icon: "nc-icon nc-briefcase-24",
+    component: RecommendView,
     layout: "/admin",
   },
   {

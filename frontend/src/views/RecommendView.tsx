@@ -1,7 +1,6 @@
-import CourseDetails from "components/Path/CourseDetails";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
-
+import SortHeader, { Sort } from "components/Path/SortHeader";
 // reactstrap components
 import {
   Card,
@@ -19,56 +18,45 @@ import {
   Button,
   Spinner,
 } from "reactstrap";
-import { getAllCareers, getCoursesByCareer, getSkills } from "services/studyService";
-import { CareerOptionDTO, CourseDTO, SkillDTO } from "utils/DTO";
+import { getAllCourses, getRecommendCareer } from "services/careerService";
+import { CareerDTO, CourseDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
-import { CareerOption, Course, Skill } from "utils/Types";
+import { Career, Course, Job } from "utils/Types";
+import CourseDetails from "components/Path/CourseDetails";
+import useDebounce from "utils/useDebounce";
 
-function StudyPath() {
+function RecommendView() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [clear, setClear] = useState<boolean>(false);
+  const [jobPage, setJobPage] = useState<number>(1);
+
+  const [sort, setSort] = useState<Sort>({ by: "", order: "" });
   const [search, setSearch] = useState<string>("");
   const [isSearch, setIsSearch] = useState<boolean>(false);
-
-  const [careers, setCareers] = useState<CareerOption[]>([]);
-  const [selectedCareer, setSelectedCareer] = useState<CareerOption>();
+  const [clear, setClear] = useState<boolean>(false);
+  const debounceSort = useDebounce(sort);
   const [courses, setCourses] = useState<Course[]>([]);
-  // const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
-  const [skills, setSkills] = useState<Skill>({ missingSkills: [], matchingSkills: [] });
-  const [recommendCourses, setRecommendCourses] = useState<Course[]>([]);
+  const [paths, setPaths] = useState<Career[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<string>("");
   const dropdownToggle = (e: any) => {
     setDropdownOpen(!dropdownOpen);
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        // Load career
-        const { data: careerData } = await getAllCareers();
-        const tmpCareerOptions: CareerOption[] = keysToCamel(careerData.items as CareerOptionDTO);
-        setCareers(tmpCareerOptions);
-        setSelectedCareer(tmpCareerOptions[0]);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (!selectedCareer) {
+    if (isSearch) {
+      setIsSearch(false);
       return;
     }
     (async () => {
       try {
         setLoading("courses");
-        const { data } = await getCoursesByCareer(selectedCareer.id, page, 10);
-        const tmp: Course[] = keysToCamel(data.items as CourseDTO);
-        setCourses(tmp);
+        const { data } = await getAllCourses(page, 10, sort.by, sort.order, search);
+        const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
+        setCourses(tempCourses);
         setTotal(data.total);
       } catch (error) {
         console.error(error);
@@ -76,14 +64,7 @@ function StudyPath() {
         setLoading("");
       }
     })();
-  }, [page, selectedCareer]);
-
-  const isSelected = (id: number): boolean => {
-    if (selectedCourses.findIndex((c) => c.id == id) > -1) {
-      return true;
-    }
-    return false;
-  };
+  }, [page, debounceSort]);
 
   const updateSelectedCourses = (course: Course, remove: boolean) => {
     if (remove) {
@@ -92,15 +73,16 @@ function StudyPath() {
     } else setSelectedCourses([...selectedCourses, course]);
   };
 
-  const analyseSkills = async () => {
+  const handleGetRecCareer = async () => {
     try {
-      setLoading("skills");
+      setLoading("career");
+      setJobs([]);
       const coursesId: number[] = selectedCourses.map((c) => {
         return c.id;
       });
-      const { data } = await getSkills(coursesId, selectedCareer?.id || 0);
-      const tmp: Skill = keysToCamel(data as SkillDTO);
-      setSkills(tmp);
+      const { data } = await getRecommendCareer(coursesId);
+      const tmp: Career[] = keysToCamel(data.career_list as CareerDTO);
+      setPaths(tmp);
     } catch (error) {
       console.error(error);
     } finally {
@@ -108,18 +90,22 @@ function StudyPath() {
     }
   };
 
+  const isSelected = (id: number): boolean => {
+    if (selectedCourses.findIndex((c) => c.id == id) > -1) {
+      return true;
+    }
+    return false;
+  };
+
   const onSearchCourse = async (reset?: boolean) => {
     setIsSearch(page !== 1);
     setClear(!reset);
     try {
       setLoading("courses");
-      
-      // Fix this to prevent filtered courses override 'courses' variable
-      // filter code:
-      // courses.filter(c => search ? c.title.toLowerCase().includes(search) : true)
-        
-      setCourses(courses);
-      setTotal(courses.length);
+      const { data } = await getAllCourses(1, 10, sort.by, sort.order, reset ? "" : search);
+      const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
+      setCourses(tempCourses);
+      setTotal(data.total);
     } catch (error) {
       console.error(error);
     } finally {
@@ -130,19 +116,6 @@ function StudyPath() {
 
   return (
     <div className="content">
-      <Row className="d-flex align-items-center px-3 mb-2">
-        <span className="mr-3">Search skills required in</span>
-        <Dropdown isOpen={dropdownOpen} toggle={(e: any) => dropdownToggle(e)}>
-          <DropdownToggle caret>{!selectedCareer ? "Career" : selectedCareer.careerPath} &nbsp;&nbsp;</DropdownToggle>
-          <DropdownMenu right>
-            {careers.map((career) => (
-              <DropdownItem key={career.id} onClick={() => setSelectedCareer(career)}>
-                {career.careerPath}
-              </DropdownItem>
-            ))}
-          </DropdownMenu>
-        </Dropdown>
-      </Row>
       <Row className="align-items-center mb-2">
         <Col md="6">
           <form onSubmit={e => e.preventDefault()}>
@@ -198,18 +171,13 @@ function StudyPath() {
           <Card>
             <CardHeader>
               <CardTitle tag="h5" className="mb-0">
-                Course Table
+                Jobs
               </CardTitle>
             </CardHeader>
             <CardBody>
               <Table responsive>
                 <thead className="text-primary">
-                  <tr>
-                    <th>Code</th>
-                    <th>Title</th>
-                    <th>Levels</th>
-                    <th>Action</th>
-                  </tr>
+                  <SortHeader headers={["code", "title", "level", "action"]} sort={sort} setSort={setSort} />
                 </thead>
                 <tbody>
                   {loading === "courses" ? (
@@ -239,7 +207,6 @@ function StudyPath() {
                           <td>{course.title}</td>
                           <td>{course.level === "ADVANCED" ? "Advanced" : "Basic"}</td>
                           <td>
-                            <CourseDetails course={course} />
                             <Button
                               title="Select course"
                               size="sm"
@@ -279,7 +246,7 @@ function StudyPath() {
           <Card className="card-stretch">
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
-                Completed Courses
+                Selected Job(s)
               </CardTitle>
             </CardHeader>
             <CardBody>
@@ -308,8 +275,12 @@ function StudyPath() {
                 >
                   Clear
                 </Button>
-                <Button disabled={!selectedCourses[0] || loading == "career"} color="primary" onClick={analyseSkills}>
-                  Analyse
+                <Button
+                  disabled={!selectedCourses[0] || loading == "career"}
+                  color="primary"
+                  onClick={handleGetRecCareer}
+                >
+                  Get Path
                 </Button>
               </div>
             </CardFooter>
@@ -317,52 +288,59 @@ function StudyPath() {
         </Col>
       </Row>
       <Row>
-        <Col sm="6">
-          <Card style={{ maxHeight: "70vh" }}>
+        <Col>
+          <Card>
             <CardHeader>
-              <CardTitle className="mb-0" tag="h5">
-                Matching Skills
+              <CardTitle tag="h5" className="mb-0">
+                Practical jobs
               </CardTitle>
             </CardHeader>
-            <CardBody style={{ overflowY: "auto", height: "95%", overflowX: "hidden" }}>
-              {skills.matchingSkills.length == 0 ? (
-                <div className="text-muted">No matching skills</div>
-              ) : (
-                skills.matchingSkills.map((skill, id) => (
-                  <div
-                    key={id}
-                    className="selected-course"
-                    role="button"
-                    onClick={() => setRecommendCourses(skill.recommendedCourses)}
-                  >
-                    <span>{skill.name}</span>
-                  </div>
-                ))
-              )}
-            </CardBody>
-          </Card>
-        </Col>
-        <Col sm="6">
-          <Card style={{ maxHeight: "70vh" }}>
-            <CardHeader>
-              <CardTitle className="mb-0" tag="h5">
-                Missing Skills
-              </CardTitle>
-            </CardHeader>
-            <CardBody style={{ overflowY: "auto", height: "95%", overflowX: "hidden" }}>
-              {skills.missingSkills.length == 0 ? (
-                <div className="text-muted">No missing skills</div>
-              ) : (
-                skills.missingSkills.map((skill, id) => (
-                  <div
-                    key={id}
-                    className="selected-course"
-                    role="button"
-                    onClick={() => setRecommendCourses(skill.recommendedCourses)}
-                  >
-                    <span>{skill.name}</span>
-                  </div>
-                ))
+            <CardBody>
+              <Table responsive>
+                <thead className="text-primary">
+                  <tr>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {jobs.length == 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-muted">
+                        No path selected
+                      </td>
+                    </tr>
+                  ) : (
+                    jobs.slice((jobPage - 1) * 10, jobPage * 10).map((job, id) => (
+                      <tr key={id}>
+                        <td>{job.title}</td>
+                        <td>{job.companyName}</td>
+                        <td>{job.companyLocation}</td>
+                        <td title={job.shortDescription}>{job.shortDescription.slice(0, 50)}...</td>
+                        <td>
+                          <a href={job.link} target="_blank" rel="noreferrer">
+                            View
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </Table>
+              {jobs.length > 10 && (
+                <div className="d-flex justify-content-end">
+                  <Pagination
+                    activePage={jobPage}
+                    totalItemsCount={jobs.length}
+                    pageRangeDisplayed={5}
+                    onChange={(pageNumber) => setJobPage(pageNumber)}
+                    itemClass="page-item-ow"
+                    linkClass="page-link-ow"
+                  />
+                </div>
               )}
             </CardBody>
           </Card>
@@ -372,4 +350,4 @@ function StudyPath() {
   );
 }
 
-export default StudyPath;
+export default RecommendView;
