@@ -16,6 +16,7 @@ class Settings(BaseSettings):
         os.getenv("FRONTEND_ADDRESS"),
         "http://localhost:3000",
         "http://localhost",
+        "http://ec2-13-250-100-229.ap-southeast-1.compute.amazonaws.com:3000"
     ]
     # BACKEND_ADDRESS: str = os.getenv("BACKEND_ADDRESS")
 
