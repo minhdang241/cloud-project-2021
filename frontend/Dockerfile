@@ -10,6 +10,11 @@ RUN yarn install
 
 COPY . .
 
+ARG REACT_APP_BACKEND
+ARG REACT_APP_AWS_REGION
+ARG REACT_APP_AWS_COGNITO_POOL_ID
+ARG REACT_APP_AWS_COGNITO_APP_ID
+
 RUN yarn run build
 
 # Bundle static assets with nginx
