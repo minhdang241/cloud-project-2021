@@ -1,0 +1,6 @@
+version: "3.9"
+
+services:
+  backend:
+    image: mindang241/cloud-2021-crawler:0.0
+    env_file: ./crawler/.env

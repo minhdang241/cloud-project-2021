@@ -8,7 +8,7 @@ class CourseLevelType:
     ADVANCED = "ADVANCED"
 
 
-class CareerType(object):
+class CareerType:
     FE = "Frontend Engineer"
     BE = "Backend Engineer"
     FULL = "Full-stack Engineer"
@@ -21,6 +21,13 @@ class CareerType(object):
     WEB = "Web Developer"
     DATA = "Data Engineer"
     SOFTWARE = "Software Engineer"
+
+
+class RequestStatus:
+    RUNNING = "RUNNING"
+    FINISH = "FINISHED"
+    CANCEL = "CANCELED"
+    ERROR = "ERROR"
 
 
 DEFAULT_NAMESPACE = "default"

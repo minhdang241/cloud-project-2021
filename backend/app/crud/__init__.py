@@ -13,6 +13,7 @@ from .crud_course import course
 # Import CRUD object in file if need to customize crud_base
 # from .crud_sample import sample
 from .crud_job import job
+from .crud_request import request
 
 # Or inherit CRUDBase here
 school = CRUDBase[School, BaseModel, BaseModel](School)

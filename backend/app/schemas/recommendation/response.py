@@ -30,7 +30,7 @@ class CareerRecommendationResponse(BaseModel):
         extra = "ignore"
 
 
-# Response schema for Mismatch skills api
+# Response request for Mismatch skills api
 class Course(BaseModel):
     name: str
     link: str
