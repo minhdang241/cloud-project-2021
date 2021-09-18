@@ -176,7 +176,7 @@ function Tables() {
                 <tbody>
                   {loading === "courses" ? (
                     <tr>
-                      <td colSpan={4} className="text-center py-5">
+                      <td colSpan={4} className="text-center py-9">
                         <Spinner
                           color="warning"
                           style={{
@@ -292,7 +292,7 @@ function Tables() {
             </CardHeader>
             <CardBody>
               {loading == "career" ? (
-                <div className="text-center py-5">
+                <div className="text-center py-9">
                   <Spinner
                     color="warning"
                     style={{
@@ -305,8 +305,8 @@ function Tables() {
                 <div className="text-muted">No recommendation</div>
               ) : (
                 paths.map((path, id) => (
-                  <div key={id} className="selected-course" onClick={() => setJobs(path.jobList)}>
-                    <div role="button">{path.career}</div>
+                  <div role="button" key={id} className="selected-course" onClick={() => setJobs(path.jobList)}>
+                    <div>{path.career}</div>
                   </div>
                 ))
               )}

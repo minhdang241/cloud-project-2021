@@ -208,7 +208,7 @@ function StudyPath() {
                 <tbody>
                   {loading === "courses" ? (
                     <tr>
-                      <td colSpan={4} className="text-center py-5">
+                      <td colSpan={4} className="text-center py-9">
                         <Spinner
                           color="warning"
                           style={{
