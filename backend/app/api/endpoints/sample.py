@@ -42,9 +42,12 @@ def get_courses(
 
 @router.get("/jobs", response_model=Page[response.JobDTO])
 def get_jobs(
+        career_id: Optional[int] = None,
         paging_params: Params = Depends(),
         db_session: Session = Depends(get_db),
 ) -> Page[response.JobDTO]:
+    if career_id:
+        return crud.job.get(db_session, paging_params=paging_params, career_id=career_id)
     return crud.job.get(db_session, paging_params=paging_params)
 
 

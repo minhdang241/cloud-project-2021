@@ -31,6 +31,7 @@ class Job(Base):
     title = Column(String)
     company_name = Column(String)
     company_location = Column(String)
+    company_district = Column(String)
     short_description = Column(String)
     description = Column(String)
     link = Column(String, unique=True)
