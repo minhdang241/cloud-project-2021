@@ -42,11 +42,9 @@ class Settings(BaseSettings):
     SENDER: str = os.getenv("SENDER")
     RECIPIENT: str = os.getenv("RECIPIENT")
 
+    AWS_COGNITO_USER_POOL: str = os.getenv("AWS_COGNITO_USER_POOL")
+    AWS_COGNITO_CLIENT_ID: str = os.getenv("AWS_COGNITO_CLIENT_ID")
 
-# NAMESPACE: str = os.getenv("NAMESPACE")
-
-# List of docker images
-# SAMPLE_IMAGE: str = os.getenv("SAMPLE_IMAGE")
 
 
 settings = Settings()

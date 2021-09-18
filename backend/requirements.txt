@@ -6,3 +6,5 @@ SQLAlchemy
 starlette
 psycopg2-binary==2.8.6
 sqlalchemy-json==0.4.0
+uvicorn
+fastapi_cloudauth
