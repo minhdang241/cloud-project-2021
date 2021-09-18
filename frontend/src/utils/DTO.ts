@@ -24,6 +24,7 @@ export type JobDTO = {
   company_name: string;
   company_location: string;
   short_description: string;
+  description: string;
   link: string;
 };
 
@@ -56,4 +57,11 @@ export type SkillDTO = {
 export type CourseLevelDTO = {
   level: string;
   count: number;
+};
+
+export type RequestDTO = {
+  request_id: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
 };

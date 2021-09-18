@@ -6,6 +6,7 @@ import {
   CourseParamsDTO,
   JobDTO,
   KeysToCamelCase,
+  RequestDTO,
   SkillDTO,
 } from "./DTO";
 
@@ -20,3 +21,4 @@ export type Job = KeysToCamelCase<JobDTO>;
 export type CourseParams = KeysToCamelCase<CourseParamsDTO>;
 export type Skill = KeysToCamelCase<SkillDTO>;
 export type CourseLevel = KeysToCamelCase<CourseLevelDTO>;
+export type Request = KeysToCamelCase<RequestDTO>;

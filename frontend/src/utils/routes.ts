@@ -28,14 +28,14 @@ const routes = [
   },
   {
     path: "/recommend",
-    name: "Recommend",
+    name: "Study Path",
     icon: "nc-icon nc-book-bookmark",
     component: RecommendView,
     layout: "/admin",
   },
   {
     path: "/study",
-    name: "Study Path",
+    name: "Skill Analysis",
     icon: "nc-icon nc-ruler-pencil",
     component: StudyPath,
     layout: "/admin",
