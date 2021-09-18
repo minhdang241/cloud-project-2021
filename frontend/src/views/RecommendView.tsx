@@ -101,7 +101,7 @@ function RecommendView() {
     <div className="content">
       <Row>
         <Col sm="12" xl="3">
-          <Card className="card-stretch">
+          <Card>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
                 Career Table
@@ -109,7 +109,7 @@ function RecommendView() {
             </CardHeader>
             <CardBody>
               {loading == "career" ? (
-                <div className="text-center py-5">
+                <div className="text-center py-9">
                   <Spinner
                     color="warning"
                     style={{
@@ -122,8 +122,13 @@ function RecommendView() {
                 <div className="text-muted">No career available</div>
               ) : (
                 careers.map((career) => (
-                  <div key={career.id} className="selected-course" onClick={() => setSelectedCareer(career)}>
-                    <div role="button">{career.careerPath}</div>
+                  <div
+                    role={selectedCareer?.id !== career.id ? "button" : ""}
+                    key={career.id}
+                    className={selectedCareer?.id === career.id ? "selecteded-course" : "selected-course"}
+                    onClick={() => selectedCareer?.id !== career.id && setSelectedCareer(career)}
+                  >
+                    <div>{career.careerPath}</div>
                   </div>
                 ))
               )}
@@ -131,6 +136,69 @@ function RecommendView() {
           </Card>
         </Col>
         <Col sm="12" xl="9">
+          <Card className="card-stretch">
+            <CardHeader>
+              <CardTitle tag="h5" className="mb-0">
+                Course Table
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Table responsive>
+                <thead className="text-primary">
+                  <tr>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Levels</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loadingCourse ? (
+                    <tr>
+                      <td colSpan={4} className="text-center py-9">
+                        <Spinner
+                          color="warning"
+                          style={{
+                            width: "3rem",
+                            height: "3rem",
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ) : courses.length == 0 ? (
+                    <tr>
+                      <td colSpan={3} className="text-muted">
+                        No course available
+                      </td>
+                    </tr>
+                  ) : (
+                    courses.map((course) => (
+                      <tr key={course.id}>
+                        <td>{course.code}</td>
+                        <td>{course.title}</td>
+                        <td>{course.level === "ADVANCED" ? "Advanced" : "Basic"}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </Table>
+              {total > 10 && (
+                <div className="d-flex justify-content-end">
+                  <Pagination
+                    activePage={page}
+                    totalItemsCount={total}
+                    pageRangeDisplayed={5}
+                    onChange={(pageNumber) => setPage(pageNumber)}
+                    itemClass="page-item-ow"
+                    linkClass="page-link-ow"
+                  />
+                </div>
+              )}
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm="12">
           <Card>
             <CardHeader>
               <CardTitle tag="h5" className="mb-0">
@@ -149,9 +217,9 @@ function RecommendView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading === "job" ? (
+                  {loading === "jobs" ? (
                     <tr>
-                      <td colSpan={5} className="text-center py-5">
+                      <td colSpan={5} className="text-center py-9">
                         <Spinner
                           color="warning"
                           style={{
@@ -191,73 +259,6 @@ function RecommendView() {
                     totalItemsCount={totalJob}
                     pageRangeDisplayed={5}
                     onChange={(pageNumber) => setJobPage(pageNumber)}
-                    itemClass="page-item-ow"
-                    linkClass="page-link-ow"
-                  />
-                </div>
-              )}
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm="12">
-          <Card>
-            <CardHeader>
-              <CardTitle tag="h5" className="mb-0">
-                Course Table
-              </CardTitle>
-            </CardHeader>
-            <CardBody>
-              <Table responsive>
-                <thead className="text-primary">
-                  <tr>
-                    <th>Code</th>
-                    <th>Title</th>
-                    <th>Levels</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loadingCourse ? (
-                    <tr>
-                      <td colSpan={4} className="text-center py-5">
-                        <Spinner
-                          color="warning"
-                          style={{
-                            width: "3rem",
-                            height: "3rem",
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ) : courses.length == 0 ? (
-                    <tr>
-                      <td colSpan={4} className="text-muted">
-                        No course available
-                      </td>
-                    </tr>
-                  ) : (
-                    courses.map((course) => (
-                      <tr key={course.id}>
-                        <td>{course.code}</td>
-                        <td>{course.title}</td>
-                        <td>{course.level === "ADVANCED" ? "Advanced" : "Basic"}</td>
-                        <td>
-                          <CourseDetails course={course} />
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </Table>
-              {total > 10 && (
-                <div className="d-flex justify-content-end">
-                  <Pagination
-                    activePage={page}
-                    totalItemsCount={total}
-                    pageRangeDisplayed={5}
-                    onChange={(pageNumber) => setPage(pageNumber)}
                     itemClass="page-item-ow"
                     linkClass="page-link-ow"
                   />

@@ -24,6 +24,7 @@ export type JobDTO = {
   company_name: string;
   company_location: string;
   short_description: string;
+  description?: string;
   link: string;
 };
 
