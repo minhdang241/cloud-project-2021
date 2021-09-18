@@ -1,29 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
-import SortHeader, { Sort } from "components/Path/SortHeader";
+
 // reactstrap components
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  CardFooter,
-  Table,
-  Row,
-  Col,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  Spinner,
-} from "reactstrap";
+import { Card, CardHeader, CardBody, CardTitle, CardFooter, Table, Row, Col, Button, Spinner } from "reactstrap";
 import { getAllCourses, getRecommendCareer } from "services/careerService";
 import { CareerDTO, CourseDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
 import { Career, Course, Job } from "utils/Types";
 import CourseDetails from "components/Path/CourseDetails";
 import useDebounce from "utils/useDebounce";
+import SortHeader, { Sort } from "components/Path/SortHeader";
 
 function Tables() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -118,7 +104,12 @@ function Tables() {
     <div className="content">
       <Row className="align-items-center mb-2">
         <Col md="6">
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSearchCourse();
+            }}
+          >
             <div className="no-border input-group mb-0">
               <input
                 placeholder="Search course title"
@@ -126,13 +117,6 @@ function Tables() {
                 className="form-control"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-
-                    onSearchCourse();
-                  }
-                }}
               />
               {clear && (
                 <div className="input-group-append">
