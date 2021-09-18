@@ -75,7 +75,7 @@
                 margin-top: 7px;
             }
 
-            > a{
+            > a, .nav-item{
                 margin: 10px 15px 0;
                 color: $white-color;
                 display: block;
@@ -94,11 +94,13 @@
             }
 
             &.active > a,
-            &.active > a > i {
+            &.active > a > i,
+            &.active > .nav-item {
               opacity: 1;
             }
 
             &:hover:not(.active) > a,
+            &:hover:not(.active) > .nav-item,
             &:focus:not(.active) > a {
                 opacity: 1;
             }
@@ -286,7 +288,7 @@
     float: right;
     width: 100%;
     top: 0;
-    background-color: #f4f3ef;;
+    background-color: $default-body-bg;
 
 
     @include transition (0.50s, cubic-bezier(0.685, 0.0473, 0.346, 1));

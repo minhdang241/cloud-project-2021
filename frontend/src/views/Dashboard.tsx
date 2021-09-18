@@ -16,6 +16,7 @@ import WordCloud from "components/graph/WordCloud";
 import { getAllCareers } from "services/studyService";
 import Chart from "chart.js";
 import Maps from "components/graph/Map";
+import RequestTable from "components/Path/RequestTable";
 
 const Header = ({ title, subtitle }: { title: string; subtitle?: string }) => {
   return (
@@ -72,6 +73,8 @@ const MapCharts = () => {
     </>
   );
 };
+import { CourseLevel } from "utils/Types";
+import RequestTable from "components/Path/RequestTable";
 
 export const LevelTable = ({ levels }: { levels: CourseLevel[] }) => {
   const total = levels[0].count + levels[1].count;
@@ -257,6 +260,9 @@ function Dashboard() {
           <SubInfo label="jobs from 45 companies" value={"389"} />
           <SubInfo label="career path" value={"12"} />
           <Col sm="1"></Col>
+        </Row>
+        <Row>
+          <RequestTable />
         </Row>
         <div className="my-5">
           <Header title="Career Distribution" subtitle="Number of Jobs per Career" />

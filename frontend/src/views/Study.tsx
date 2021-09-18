@@ -113,11 +113,11 @@ function StudyPath() {
     setClear(!reset);
     try {
       setLoading("courses");
-      
+
       // Fix this to prevent filtered courses override 'courses' variable
       // filter code:
       // courses.filter(c => search ? c.title.toLowerCase().includes(search) : true)
-        
+
       setCourses(courses);
       setTotal(courses.length);
     } catch (error) {
@@ -145,7 +145,7 @@ function StudyPath() {
       </Row>
       <Row className="align-items-center mb-2">
         <Col md="6">
-          <form onSubmit={e => e.preventDefault()}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <div className="no-border input-group mb-0">
               <input
                 placeholder="Search course title"
@@ -154,9 +154,9 @@ function StudyPath() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-              
+
                     onSearchCourse();
                   }
                 }}
@@ -184,12 +184,6 @@ function StudyPath() {
             <Button className="mr-3" onClick={() => onSearchCourse()}>
               Search
             </Button>
-            {/* <Dropdown isOpen={dropdownOpen} toggle={(e: any) => dropdownToggle(e)}>
-              <DropdownToggle caret>{level}&nbsp;&nbsp;</DropdownToggle>
-              <DropdownMenu right>
-                {["All levels","Basic","Advanced"].map(lv=><DropdownItem key={lv} onClick={(e)=>console.log(e.target)}>{lv}</DropdownItem>)}
-              </DropdownMenu>
-            </Dropdown> */}
           </div>
         </Col>
       </Row>
@@ -214,7 +208,7 @@ function StudyPath() {
                 <tbody>
                   {loading === "courses" ? (
                     <tr>
-                      <td colSpan={4} className="text-center py-5">
+                      <td colSpan={4} className="text-center py-9">
                         <Spinner
                           color="warning"
                           style={{
@@ -244,7 +238,7 @@ function StudyPath() {
                               title="Select course"
                               size="sm"
                               color={selected ? "danger" : "warning"}
-                              className="p-1 ml-3"
+                              className="p-1 ml-sm-1 ml-lg-2"
                               onClick={() => updateSelectedCourses(course, selected)}
                             >
                               {selected ? (
@@ -299,12 +293,12 @@ function StudyPath() {
               )}
             </CardBody>
             <CardFooter>
-              <div className="d-flex justify-content-end border-top pt-2">
+              <div className="d-flex justify-content-end justify-content-xl-around border-top pt-2">
                 <Button
                   disabled={!selectedCourses[0]}
                   color="primary"
                   onClick={() => setSelectedCourses([])}
-                  className="mr-3"
+                  className="mr-3 m-xl-0"
                 >
                   Clear
                 </Button>
@@ -317,7 +311,7 @@ function StudyPath() {
         </Col>
       </Row>
       <Row>
-        <Col sm="6">
+        <Col sm="12" xl="6">
           <Card style={{ maxHeight: "70vh" }}>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
@@ -342,7 +336,7 @@ function StudyPath() {
             </CardBody>
           </Card>
         </Col>
-        <Col sm="6">
+        <Col sm="12" xl="6">
           <Card style={{ maxHeight: "70vh" }}>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">

@@ -1,10 +1,12 @@
-from sqlalchemy import (Column, ForeignKey, Integer, String)
+import datetime
+
+from sqlalchemy import (Boolean, Column, ForeignKey, Integer, String, TIMESTAMP)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy_json import mutable_json_type
 
 from .setup_postgres import Base
-from .type import career_type, course_level_type
+from .type import career_type, course_level_type, request_status
 
 
 class School(Base):
@@ -48,3 +50,13 @@ class Career(Base):
     total_jobs = Column(Integer)
     jobs = relationship("Job", cascade="delete", backref="job_career")
     embeddings = Column("embeddings", mutable_json_type(dbtype=JSONB, nested=True))
+
+
+class Request(Base):
+    status = Column(request_status)
+    created_at = Column(
+        TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
+    )
+    updated_at = Column(TIMESTAMP(timezone=True))
+    created_success = Column(Boolean)
+    request_metadata = Column("request_metadata", mutable_json_type(dbtype=JSONB, nested=True))

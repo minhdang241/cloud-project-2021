@@ -1,8 +1,18 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Nav } from "reactstrap";
+import { Nav, NavItem } from "reactstrap";
+import { Auth } from "aws-amplify";
 
 let ps: any;
+
+async function signOut() {
+  try {
+    await Auth.signOut();
+    window.location.reload();
+  } catch (error) {
+    alert("unexpected error");
+  }
+}
 
 function Sidebar(props: any) {
   const sidebar = React.useRef<HTMLDivElement>(null); //React.useRef();
@@ -25,10 +35,10 @@ function Sidebar(props: any) {
             );
           })}
           <li>
-            <NavLink to="/" className="nav-link" activeClassName="active">
+            <NavItem className="nav-link" activeClassName="active" onClick={signOut}>
               <i className="nc-icon nc-user-run" />
               <p>Logout</p>
-            </NavLink>
+            </NavItem>
           </li>
         </Nav>
       </div>

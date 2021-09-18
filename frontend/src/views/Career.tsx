@@ -118,7 +118,7 @@ function Tables() {
     <div className="content">
       <Row className="align-items-center mb-2">
         <Col md="6">
-          <form onSubmit={e => e.preventDefault()}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <div className="no-border input-group mb-0">
               <input
                 placeholder="Search course title"
@@ -127,9 +127,9 @@ function Tables() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-              
+
                     onSearchCourse();
                   }
                 }}
@@ -157,12 +157,6 @@ function Tables() {
             <Button className="mr-3" onClick={() => onSearchCourse()}>
               Search
             </Button>
-            {/* <Dropdown isOpen={dropdownOpen} toggle={(e: any) => dropdownToggle(e)}>
-              <DropdownToggle caret>{level}&nbsp;&nbsp;</DropdownToggle>
-              <DropdownMenu right>
-                {["All levels","Basic","Advanced"].map(lv=><DropdownItem key={lv} onClick={(e)=>console.log(e.target)}>{lv}</DropdownItem>)}
-              </DropdownMenu>
-            </Dropdown> */}
           </div>
         </Col>
       </Row>
@@ -182,7 +176,7 @@ function Tables() {
                 <tbody>
                   {loading === "courses" ? (
                     <tr>
-                      <td colSpan={4} className="text-center py-5">
+                      <td colSpan={4} className="text-center py-9">
                         <Spinner
                           color="warning"
                           style={{
@@ -212,7 +206,7 @@ function Tables() {
                               title="Select course"
                               size="sm"
                               color={selected ? "danger" : "warning"}
-                              className="p-1 ml-3"
+                              className="p-1 ml-sm-1 ml-lg-2"
                               onClick={() => updateSelectedCourses(course, selected)}
                             >
                               {selected ? (
@@ -267,12 +261,12 @@ function Tables() {
               )}
             </CardBody>
             <CardFooter>
-              <div className="d-flex justify-content-end border-top pt-2">
+              <div className="d-flex justify-content-end justify-content-xl-around border-top pt-2">
                 <Button
                   disabled={!selectedCourses[0]}
                   color="primary"
                   onClick={() => setSelectedCourses([])}
-                  className="mr-3"
+                  className="mr-3 m-xl-0"
                 >
                   Clear
                 </Button>
@@ -289,7 +283,7 @@ function Tables() {
         </Col>
       </Row>
       <Row>
-        <Col sm="3">
+        <Col sm="12" xl="3">
           <Card className="card-stretch">
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
@@ -298,7 +292,7 @@ function Tables() {
             </CardHeader>
             <CardBody>
               {loading == "career" ? (
-                <div className="text-center py-5">
+                <div className="text-center py-9">
                   <Spinner
                     color="warning"
                     style={{
@@ -311,8 +305,8 @@ function Tables() {
                 <div className="text-muted">No recommendation</div>
               ) : (
                 paths.map((path, id) => (
-                  <div key={id} className="selected-course" onClick={() => setJobs(path.jobList)}>
-                    <div role="button">{path.career}</div>
+                  <div role="button" key={id} className="selected-course" onClick={() => setJobs(path.jobList)}>
+                    <div>{path.career}</div>
                   </div>
                 ))
               )}
@@ -334,7 +328,7 @@ function Tables() {
                     <th>Company</th>
                     <th>Location</th>
                     <th>Description</th>
-                    <th>Link</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -352,9 +346,15 @@ function Tables() {
                         <td>{job.companyLocation}</td>
                         <td title={job.shortDescription}>{job.shortDescription.slice(0, 50)}...</td>
                         <td>
-                          <a href={job.link} target="_blank" rel="noreferrer">
-                            View
-                          </a>
+                          <Button
+                            title="Hiring post"
+                            size="sm"
+                            color="warning"
+                            className="p-1 ml-sm-1 ml-lg-2"
+                            onClick={() => window.open(job.link, "_blank")?.focus()}
+                          >
+                            <i className="fas fa-lg fa-external-link-alt"></i>
+                          </Button>
                         </td>
                       </tr>
                     ))
