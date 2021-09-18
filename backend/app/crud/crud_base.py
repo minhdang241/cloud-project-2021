@@ -42,7 +42,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             raise EntityDoesNotExist("{0} with id {1} does not exist".format(self.model.__name__, id))
         return obj
 
-    def filter_by(self, db: Session, order_desc=True, paging_params: Params = None, **kwargs) -> Union[Page, List]:
+    def filter_by(self, db: Session, order_desc=True, paging_params: Params = None, order_field: str = None,
+                  **kwargs) -> Union[Page, List]:
         query = db.query(self.model)
         for key, value in kwargs.items():
             if hasattr(self.model, key):
@@ -50,10 +51,16 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                     query = query.filter(getattr(self.model, key).in_(value))
                 else:
                     query = query.filter(getattr(self.model, key) == value)
-        if order_desc:
-            query = query.order_by(desc(self.model.id))
+        if not order_field:
+            order_field = self.model.id
         else:
-            query = query.order_by(asc(self.model.id))
+            order_field = getattr(self.model, order_field)
+
+        if order_desc:
+            query = query.order_by(desc(order_field))
+        else:
+            query = query.order_by(asc(order_field))
+
         return paginate(query, paging_params) if paging_params else query.all()
 
     def get_by_fields(

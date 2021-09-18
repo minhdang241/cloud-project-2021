@@ -84,7 +84,10 @@ class JobSpider(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         job_selectors = response.xpath('.//a[contains(@id,"job_")]')
-        
+
+        if settings.LIMIT_JOB:
+            job_selectors = job_selectors[:int(settings.LIMIT_JOB)]
+
         for selector in job_selectors:
             job = Job()
             job['title'] = selector.xpath('.//h2[contains(@class,"jobTitle")]/span/text()').extract_first()

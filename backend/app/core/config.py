@@ -13,12 +13,10 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = os.getenv("PROJECT_NAME", "CLOUD PROJECT")
     BACKEND_CORS_ORIGINS: List[str] = [
         # React localhost
-        os.getenv("FRONTEND_ADDRESS"),
+        os.getenv("FRONTEND_ADDRESS", "http://localhost"),
         "http://localhost:3000",
-        "http://localhost",
         "http://ec2-13-250-100-229.ap-southeast-1.compute.amazonaws.com:3000"
     ]
-    # BACKEND_ADDRESS: str = os.getenv("BACKEND_ADDRESS")
 
     # Postgres db information
     POSTGRES_USER: str = os.getenv("POSTGRES_USER")
@@ -33,11 +31,20 @@ class Settings(BaseSettings):
         os.getenv("POSTGRES_PORT"),
         os.getenv("POSTGRES_DB_NAME"),
     )
+    CRAWLER_IMAGE: str = os.getenv('CRAWLER_IMAGE')
+    LIMIT_CAREERS: str = os.getenv("LIMIT_CAREERS")
+    LIMIT_PAGE: str = os.getenv("LIMIT_PAGE")
+    UPDATE_REQUEST_URL: str = os.getenv("UPDATE_REQUEST_URL")
+    LIMIT_JOB: str = os.getenv("LIMIT_JOB")
+    AWS_ACCESS_KEY: str = os.getenv("AWS_ACCESS_KEY")
+    AWS_SECRET_KEY: str = os.getenv("AWS_SECRET_KEY")
+    AWS_REGION: str = os.getenv("AWS_REGION")
+    SENDER: str = os.getenv("SENDER")
+    RECIPIENT: str = os.getenv("RECIPIENT")
+    ACCESS_TOKEN: str = os.getenv("ACCESS_TOKEN")
 
-    # NAMESPACE: str = os.getenv("NAMESPACE")
-
-    # List of docker images
-    # SAMPLE_IMAGE: str = os.getenv("SAMPLE_IMAGE")
+    AWS_COGNITO_USER_POOL: str = os.getenv("AWS_COGNITO_USER_POOL")
+    AWS_COGNITO_CLIENT_ID: str = os.getenv("AWS_COGNITO_CLIENT_ID")
 
 
 settings = Settings()

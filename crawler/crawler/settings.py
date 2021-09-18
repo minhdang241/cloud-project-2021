@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 from pydantic import BaseSettings
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
-print("NAAAA", os.path.join(BASE_DIR, "crawler/.env"))
 load_dotenv(os.path.join(BASE_DIR, "crawler/.env"))
 
 
@@ -25,6 +24,15 @@ class Settings(BaseSettings):
     )
     LIMIT_CAREERS: str = os.getenv("LIMIT_CAREERS")
     LIMIT_PAGE: str = os.getenv("LIMIT_PAGE")
+    REQUEST_ID: str = os.getenv("REQUEST_ID")
+    UPDATE_REQUEST_URL: str = os.getenv("UPDATE_REQUEST_URL")
+    LIMIT_JOB: str = os.getenv("LIMIT_JOB")
+    AWS_ACCESS_KEY: str = os.getenv("AWS_ACCESS_KEY")
+    AWS_SECRET_KEY: str = os.getenv("AWS_SECRET_KEY")
+    AWS_REGION: str = os.getenv("AWS_REGION")
+    SENDER: str = os.getenv("SENDER")
+    RECIPIENT: str = os.getenv("RECIPIENT")
+    ACCESS_TOKEN: str = os.getenv("ACCESS_TOKEN")
 
 
 settings = Settings()

@@ -7,3 +7,6 @@ sentence-transformers
 transformers
 pydantic
 scrapy
+requests
+boto3
+python-dotenv

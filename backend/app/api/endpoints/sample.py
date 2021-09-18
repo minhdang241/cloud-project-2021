@@ -1,12 +1,27 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
+from fastapi_pagination import Page, Params
 from sqlalchemy.orm import Session
 
-from app.resources.utils import get_db
-from app.schemas.sample import request, response
-from fastapi_pagination import Params, Page
-from typing import Optional
 from app import crud
+from app.api.securities.cognito_auth import UserInfo, auth
+from app.resources.utils import get_db
+from app.schemas.sample import response
+
 router = APIRouter()
+
+
+@router.get("/test_admin_only", dependencies=[Depends(auth.scope(["admin"]))])
+def admin_only():
+    # access token is valid
+    return "Hello"
+
+
+@router.get("/test_any_user")
+def any_user(user: UserInfo = Depends(auth.claim(UserInfo))):
+    # access token is valid
+    return user
 
 
 @router.get("/schools", response_model=Page[response.SchoolDTO])

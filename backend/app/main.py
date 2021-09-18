@@ -39,7 +39,6 @@ def get_application() -> FastAPI:
     application.add_exception_handler(RequestValidationError, request_validation_exception_handler)
     application.add_exception_handler(ValidationError, validation_exception_handler)
     application.add_exception_handler(EntityDoesNotExist, entity_error_handler)
-
     application.include_router(router, prefix=settings.API_PREFIX)
     return application
 
