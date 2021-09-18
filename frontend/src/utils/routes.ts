@@ -29,7 +29,7 @@ const routes = [
   {
     path: "/recommend",
     name: "Recommend",
-    icon: "nc-icon nc-briefcase-24",
+    icon: "nc-icon nc-book-bookmark",
     component: RecommendView,
     layout: "/admin",
   },
