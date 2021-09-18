@@ -19,6 +19,15 @@ def get_requests(
     return resp
 
 
+@router.get("/requests/{request_id}", response_model=response.Request)
+def get_requests(
+        request_id: int,
+        db_session: Session = Depends(get_db),
+):
+    resp = request.get_request_by_id(db_session, request_id)
+    return resp
+
+
 @router.post("/requests")
 def create_request(
         db_session: Session = Depends(get_db),

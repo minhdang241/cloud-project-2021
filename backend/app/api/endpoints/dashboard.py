@@ -1,3 +1,5 @@
+import string
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -6,6 +8,7 @@ from app.schemas.dashboard import response
 from app import crud
 from collections import Counter
 from typing import Optional
+from app.resources.strings import STOP_WORDS
 
 router = APIRouter()
 
@@ -22,9 +25,14 @@ def get_course_word_cloud(
         db_session: Session = Depends(get_db)
 ):
     objs = crud.course.get(db_session, fields=["preprocessed_description"])
-    desc_list = [o.preprocessed_description for o in objs]
 
-    counter = Counter(" ".join(desc_list).split()).most_common(60)
+    words = []
+    for o in objs:
+        for c in o.preprocessed_description.split():
+            if c.lower() not in STOP_WORDS and c not in string.punctuation:
+                words.append(c.lower())
+
+    counter = Counter(" ".join(words).split()).most_common(60)
     return response.WordFrequencies(
         words=[response.WordFreq(value=value, count=count) for (value, count) in counter])
 
@@ -50,9 +58,13 @@ def get_job_word_cloud(
     else:
         objs = crud.job.get(db_session, fields=["preprocessed_description"])
 
-    desc_list = [o.preprocessed_description for o in objs]
+    words = []
+    for o in objs:
+        for c in o.preprocessed_description.split():
+            if c not in STOP_WORDS and c not in string.punctuation:
+                words.append(c)
 
-    counter = Counter(" ".join(desc_list).split()).most_common(60)
+    counter = Counter(" ".join(words).split()).most_common(60)
     return response.WordFrequencies(
         words=[response.WordFreq(value=value, count=count) for (value, count) in counter])
 

@@ -51,6 +51,10 @@ def create_request(db_session: Session):
     return success, obj
 
 
+def get_request_by_id(db_session: Session, request_id: int):
+    return crud.request.get_by_id(db_session, request_id)
+
+
 def update_request(db_session: Session, data: dict):
     db_obj = crud.request.get_by_id(db_session, data.get('request_id'))
     obj_in = RequestUpdate(
