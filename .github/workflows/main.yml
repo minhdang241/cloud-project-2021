@@ -58,7 +58,11 @@ jobs:
             - name: Build and push frontend image
               if: steps.filter.outputs.frontend == 'true'
               run: |
-                  docker build ./frontend/ --file frontend/Dockerfile --tag ${{ env.IMAGE_REGISTRY }}/cloud-2021-frontend:${{ secrets.FRONTEND_MAJOR }}.${{ secrets.FRONTEND_MINOR }}
+                  docker build --build-arg REACT_APP_BACKEND=${{ secrets.REACT_APP_BACKEND }} \
+                  --build-arg REACT_APP_AWS_REGION=${{ secrets.REACT_APP_AWS_REGION }} \
+                  --build-arg REACT_APP_AWS_COGNITO_POOL_ID=${{ secrets.REACT_APP_AWS_COGNITO_POOL_ID }} \
+                  --build-arg REACT_APP_AWS_COGNITO_APP_ID=${{ secrets.REACT_APP_AWS_COGNITO_APP_ID }} \
+                  ./frontend/ --file frontend/Dockerfile --tag ${{ env.IMAGE_REGISTRY }}/cloud-2021-frontend:${{ secrets.FRONTEND_MAJOR }}.${{ secrets.FRONTEND_MINOR }}
                   docker push ${{ env.IMAGE_REGISTRY }}/cloud-2021-frontend:${{ secrets.FRONTEND_MAJOR }}.${{ secrets.FRONTEND_MINOR }}
 
             - name: Update FRONTEND MINOR version
