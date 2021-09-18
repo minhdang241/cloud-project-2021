@@ -57,3 +57,17 @@ export type CourseLevelDTO = {
   level: string;
   count: number;
 };
+
+export type WordFreqDTO = {
+  value: string;
+  count: number;
+};
+
+export type WordFrquenciesDTO = {
+  words: Array<WordFreqDTO>;
+};
+
+export type JobDistrictDTO = {
+  company_district: number;
+  count: number;
+};

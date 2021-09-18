@@ -4,9 +4,12 @@ import {
   CourseDTO,
   CourseLevelDTO,
   CourseParamsDTO,
+  JobDistrictDTO,
   JobDTO,
   KeysToCamelCase,
   SkillDTO,
+  WordFreqDTO,
+  WordFrquenciesDTO,
 } from "./DTO";
 
 export interface Dictionary<T> {
@@ -20,3 +23,6 @@ export type Job = KeysToCamelCase<JobDTO>;
 export type CourseParams = KeysToCamelCase<CourseParamsDTO>;
 export type Skill = KeysToCamelCase<SkillDTO>;
 export type CourseLevel = KeysToCamelCase<CourseLevelDTO>;
+export type WordFreq = KeysToCamelCase<WordFreqDTO>;
+export type WordFrquencies = KeysToCamelCase<WordFrquenciesDTO>;
+export type JobDistrict = KeysToCamelCase<JobDistrictDTO>;
