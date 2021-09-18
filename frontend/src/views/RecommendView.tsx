@@ -118,7 +118,7 @@ function RecommendView() {
     <div className="content">
       <Row className="align-items-center mb-2">
         <Col md="6">
-          <form onSubmit={e => e.preventDefault()}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <div className="no-border input-group mb-0">
               <input
                 placeholder="Search course title"
@@ -127,9 +127,9 @@ function RecommendView() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-              
+
                     onSearchCourse();
                   }
                 }}
@@ -266,12 +266,12 @@ function RecommendView() {
               )}
             </CardBody>
             <CardFooter>
-              <div className="d-flex justify-content-end border-top pt-2">
+              <div className="d-flex justify-content-end justify-content-xl-around border-top pt-2">
                 <Button
                   disabled={!selectedCourses[0]}
                   color="primary"
                   onClick={() => setSelectedCourses([])}
-                  className="mr-3"
+                  className="mr-3 m-xl-0"
                 >
                   Clear
                 </Button>

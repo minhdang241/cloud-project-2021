@@ -118,7 +118,7 @@ function Tables() {
     <div className="content">
       <Row className="align-items-center mb-2">
         <Col md="6">
-          <form onSubmit={e => e.preventDefault()}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <div className="no-border input-group mb-0">
               <input
                 placeholder="Search course title"
@@ -127,9 +127,9 @@ function Tables() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
-              
+
                     onSearchCourse();
                   }
                 }}
@@ -212,7 +212,7 @@ function Tables() {
                               title="Select course"
                               size="sm"
                               color={selected ? "danger" : "warning"}
-                              className="p-1 ml-3"
+                              className="p-1 ml-sm-1 ml-lg-3"
                               onClick={() => updateSelectedCourses(course, selected)}
                             >
                               {selected ? (
@@ -267,12 +267,12 @@ function Tables() {
               )}
             </CardBody>
             <CardFooter>
-              <div className="d-flex justify-content-end border-top pt-2">
+              <div className="d-flex justify-content-end justify-content-xl-around border-top pt-2">
                 <Button
                   disabled={!selectedCourses[0]}
                   color="primary"
                   onClick={() => setSelectedCourses([])}
-                  className="mr-3"
+                  className="mr-3 m-xl-0"
                 >
                   Clear
                 </Button>
@@ -289,7 +289,7 @@ function Tables() {
         </Col>
       </Row>
       <Row>
-        <Col sm="3">
+        <Col sm="12" xl="3">
           <Card className="card-stretch">
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
