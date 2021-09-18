@@ -73,8 +73,6 @@ const MapCharts = () => {
     </>
   );
 };
-import { CourseLevel } from "utils/Types";
-import RequestTable from "components/Path/RequestTable";
 
 export const LevelTable = ({ levels }: { levels: CourseLevel[] }) => {
   const total = levels[0].count + levels[1].count;
@@ -261,7 +259,7 @@ function Dashboard() {
           <SubInfo label="career path" value={"12"} />
           <Col sm="1"></Col>
         </Row>
-        <Row>
+        <Row className="mt-5">
           <RequestTable />
         </Row>
         <div className="my-5">
