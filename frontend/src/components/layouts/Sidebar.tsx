@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Nav } from "reactstrap";
+import { Nav, NavItem } from "reactstrap";
 import { Auth } from "aws-amplify";
 
 let ps: any;
@@ -35,13 +35,10 @@ function Sidebar(props: any) {
             );
           })}
           <li>
-            <NavLink to="/" className="nav-link" activeClassName="active">
+            <NavItem className="nav-link" activeClassName="active" onClick={signOut}>
               <i className="nc-icon nc-user-run" />
               <p>Logout</p>
-            </NavLink>
-          </li>
-          <li>
-            <button onClick={signOut}>logout</button>
+            </NavItem>
           </li>
         </Nav>
       </div>
