@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 // reactstrap components
 import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Spinner, Button } from "reactstrap";
+import { getRequests } from "services/requestService";
 import { RequestDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
 import { Request } from "utils/Types";
+import moment from "moment";
 
 function RequestTable() {
   const [page, setPage] = useState<number>(1);
@@ -15,6 +17,10 @@ function RequestTable() {
   useEffect(() => {
     (async () => {
       try {
+        const { data: requestData } = await getRequests();
+        const temp: Request[] = keysToCamel(requestData.items as RequestDTO);
+        setRequests(temp);
+        setTotal(requestData.total);
         setLoading(true);
         console.log("object");
       } catch (error) {
@@ -24,6 +30,18 @@ function RequestTable() {
       }
     })();
   }, [page]);
+
+  const getDiff = (dateStr1?: string, dateStr2?: string): string => {
+    if (dateStr1 == null || dateStr2 == null) {
+      return "";
+    }
+    const diff = new Date(dateStr1).getTime() - new Date(dateStr2).getTime();
+    const elements = moment
+      .utc(diff * 1000)
+      .format("mm:ss")
+      .split(":");
+    return `${elements[0]} minutes ${elements[1]} seconds`;
+  };
 
   return (
     <Col sm="12">
@@ -42,7 +60,7 @@ function RequestTable() {
               <tr>
                 <th>ID</th>
                 <th>Created at</th>
-                <th>Updated at</th>
+                <th>Elapse time</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -67,10 +85,10 @@ function RequestTable() {
                 </tr>
               ) : (
                 requests.map((req) => (
-                  <tr key={req.requestId}>
-                    <td>{req.requestId}</td>
-                    <td>{req.createdAt}</td>
-                    <td>{req.updatedAt}</td>
+                  <tr key={req.id}>
+                    <td>{req.id}</td>
+                    <td>{moment(req.createdAt).calendar()}</td>
+                    <td>{getDiff(req.updatedAt, req.createdAt)}</td>
                     <td>{req.status}</td>
                   </tr>
                 ))

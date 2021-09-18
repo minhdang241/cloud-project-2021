@@ -37,7 +37,7 @@ const WordCloud = ({
           {wordFreqData && (
             <TagCloud
               minSize={12}
-              maxSize={50}
+              maxSize={40}
               tags={wordFreqData}
               colorOptions={{
                 luminosity: "dark",

@@ -74,7 +74,7 @@ export type JobDistrictDTO = {
 };
 
 export type RequestDTO = {
-  request_id: string;
+  id: number;
   created_at: string;
   updated_at: string;
   status: string;
