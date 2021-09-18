@@ -15,7 +15,9 @@ class Settings(BaseSettings):
         # React localhost
         os.getenv("FRONTEND_ADDRESS", "http://localhost"),
         "http://localhost:3000",
-        "http://ec2-13-250-100-229.ap-southeast-1.compute.amazonaws.com:3000"
+        "http://ec2-13-250-100-229.ap-southeast-1.compute.amazonaws.com:3000",
+        "http://ec2-13-250-100-229.ap-southeast-1.compute.amazonaws.com",
+        "*"
     ]
 
     # Postgres db information

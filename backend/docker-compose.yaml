@@ -2,8 +2,12 @@ version: "3.9"
 
 services:
   backend:
-    image: mindang241/cloud-2021-backend:1.0
+    image: mindang241/cloud-2021-backend:2.0
     ports:
       - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # - /Users/minhdang/.docker/config.json:/root/.docker/config.json
+    network_mode: bridge
     env_file: ./env/.env
 
