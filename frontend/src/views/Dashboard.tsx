@@ -296,81 +296,9 @@ function Dashboard() {
             />
           </Col>
         </Row>
-        {/* <Row className="mb-5">
-          <Col md={{ size: 8, offset: 2 }} className="border-top border-bottom">
-            <Row>
-              <Col sm="1"></Col>
-              <SubInfo label="courses from SST" value={"123"} />
-              <SubInfo label="jobs from 45 companies" value={"389"} />
-              <SubInfo label="career path" value={"12"} />
-              <Col sm="1"></Col>
-            </Row>
-          </Col>
-        </Row>
-       <Row>
-         <Col>
-           <Card className="p-3">
-             <CardBody>
-             <h5>Career Distribution</h5>
-             <DistributionCareers />
-
-             <Row className="my-5">
-               <Col>
-               <h5>Map of Jobs in HCM city</h5>
-             <MapCharts />
-               </Col>
-               <Col>
-               <WordCloud title="Job Description Word Cloud" getWordCloud={getJobWordCloud} />
-               </Col>
-             </Row>
-             </CardBody>
-           </Card>
-         </Col>
-       </Row> */}
       </div>
     </>
   );
 }
 
 export default Dashboard;
-
-// <Row className="mb-5">
-// <Col md={{ size: 8, offset: 2 }}>
-//   {/* <Card className="border shadow-none" style={{borderColor: "#d0d0d0"}}>
-//     <CardHeader>
-//       <CardTitle tag="h5">Career Distribution</CardTitle>
-//     </CardHeader>
-//     <CardBody> */}
-//   <Row>
-//     <Col md="10">
-//       <DistributionCareers />
-//     </Col>
-//     <Col></Col>
-//   </Row>
-//   {/* </CardBody>
-//   </Card> */}
-// </Col>
-// </Row>
-// <Row>
-// <Col md={{ size: 4, offset: 2 }}>
-//   {/* <Card>
-//     <CardHeader> */}
-//   <CardTitle tag="h5">Map of Jobs in HCM city</CardTitle>
-//   {/* </CardHeader>
-//     <CardBody> */}
-//   <MapCharts />
-//   {/* </CardBody>
-//   </Card> */}
-// </Col>
-// <Col md="4">
-//   <WordCloud title="Job Description Word Cloud" getWordCloud={getJobWordCloud} />
-// </Col>
-// </Row>
-// <Row>
-// <Col md={{ size: 4, offset: 2 }}>
-//   <CourseLevelChart />
-// </Col>
-// <Col md={{ size: 4 }}>
-//   <WordCloud title="Course Description Word Cloud" getWordCloud={getCourseWordCloud} />
-// </Col>
-// </Row>
