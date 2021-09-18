@@ -34,6 +34,9 @@ class Settings(BaseSettings):
         os.getenv("POSTGRES_DB_NAME"),
     )
 
+    AWS_REGION: str = os.getenv("AWS_REGION")
+    AWS_COGNITO_USER_POOL: str = os.getenv("AWS_COGNITO_USER_POOL")
+    AWS_COGNITO_CLIENT_ID: str = os.getenv("AWS_COGNITO_CLIENT_ID")
     # NAMESPACE: str = os.getenv("NAMESPACE")
 
     # List of docker images
