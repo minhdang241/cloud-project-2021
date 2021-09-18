@@ -200,6 +200,19 @@ a.text-white:focus {
   }
 }
 
+.selecteded-course {
+  background-color: #8cd5d6b4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: {
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.8rem;
+    right: 0.8rem;
+  }
+}
+
 .selected-course {
   display: flex;
   justify-content: space-between;
@@ -214,7 +227,7 @@ a.text-white:focus {
     visibility: hidden;
   }
   &:hover {
-    background-color: #f6f9fc;
+    background-color: #cceaeb9c;
     i {
       visibility: visible;
     }
