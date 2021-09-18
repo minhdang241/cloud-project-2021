@@ -6,6 +6,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { CourseLevelDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
 import { CourseLevel } from "utils/Types";
+import RequestTable from "components/Path/RequestTable";
 
 export const LevelTable = ({ levels }: { levels: CourseLevel[] }) => {
   const total = levels[0].count + levels[1].count;
@@ -54,6 +55,9 @@ function Dashboard() {
     <>
       <div className="content">
         <Row>
+          <RequestTable />
+        </Row>
+        <Row>
           <Col sm={{ size: 4, offset: 4 }}>
             <Card>
               <CardHeader>
@@ -96,9 +100,6 @@ function Dashboard() {
                 {levels[0] && <LevelTable levels={levels} />}
                 <div className="stats">
                   <div className="text-muted">Updated 3 minutes ago</div>
-                  <Button title="Update chart" size="sm" color="primary" className="p-1" onClick={getCourseLevel}>
-                    Refresh
-                  </Button>
                 </div>
               </CardFooter>
             </Card>
