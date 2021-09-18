@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button, Modal, ModalHeader, ModalBody, Row, Col } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 
-const CourseDetails = ({ job }: { job: string }) => {
+const JobDetails = ({ job }: { job: string }) => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
 
@@ -20,4 +20,4 @@ const CourseDetails = ({ job }: { job: string }) => {
   );
 };
 
-export default CourseDetails;
+export default JobDetails;

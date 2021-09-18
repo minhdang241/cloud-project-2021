@@ -58,3 +58,10 @@ export type CourseLevelDTO = {
   level: string;
   count: number;
 };
+
+export type RequestDTO = {
+  request_id: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+};

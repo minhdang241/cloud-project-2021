@@ -151,7 +151,7 @@ function RecommendView() {
                   ) : courses.length == 0 ? (
                     <tr>
                       <td colSpan={3} className="text-muted">
-                        No course available
+                        Please select a career
                       </td>
                     </tr>
                   ) : (
@@ -186,7 +186,7 @@ function RecommendView() {
           <Card>
             <CardHeader>
               <CardTitle tag="h5" className="mb-0">
-                Practical jobs
+                Practical Jobs
               </CardTitle>
             </CardHeader>
             <CardBody>
