@@ -32,6 +32,7 @@ def create_request(db_session: Session):
                    'AWS_ACCESS_KEY': settings.AWS_ACCESS_KEY,
                    'AWS_SECRET_KEY': settings.AWS_SECRET_KEY,
                    'AWS_REGION': settings.AWS_REGION,
+                   'ACCESS_TOKEN': settings.ACCESS_TOKEN,
                    'SENDER': settings.SENDER,
                    'RECIPIENT': settings.RECIPIENT,
                    'POSTGRES_USER': settings.POSTGRES_USER,

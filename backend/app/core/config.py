@@ -41,10 +41,10 @@ class Settings(BaseSettings):
     AWS_REGION: str = os.getenv("AWS_REGION")
     SENDER: str = os.getenv("SENDER")
     RECIPIENT: str = os.getenv("RECIPIENT")
+    ACCESS_TOKEN: str = os.getenv("ACCESS_TOKEN")
 
     AWS_COGNITO_USER_POOL: str = os.getenv("AWS_COGNITO_USER_POOL")
     AWS_COGNITO_CLIENT_ID: str = os.getenv("AWS_COGNITO_CLIENT_ID")
-
 
 
 settings = Settings()
