@@ -2,29 +2,13 @@ import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 import SortHeader, { Sort } from "components/Path/SortHeader";
 // reactstrap components
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  CardFooter,
-  Table,
-  Row,
-  Col,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  Spinner,
-} from "reactstrap";
-import { getAllCourses, getJobsByCareer } from "services/careerService";
+import { Card, CardHeader, CardBody, CardTitle, CardFooter, Table, Row, Col, Button, Spinner } from "reactstrap";
+import { getJobsByCareer } from "services/careerService";
 import { getAllCareers, getCoursesByCareer } from "services/studyService";
-import { CareerDTO, CourseDTO, CareerOptionDTO, JobDTO } from "utils/DTO";
+import { CourseDTO, CareerOptionDTO, JobDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
-import { Career, Course, Job, CareerOption } from "utils/Types";
-import CourseDetails from "components/Path/CourseDetails";
-import useDebounce from "utils/useDebounce";
+import { Course, Job, CareerOption } from "utils/Types";
+import JobDetails from "components/Path/JobDetails";
 
 function RecommendView() {
   const [page, setPage] = useState<number>(1);
@@ -104,7 +88,7 @@ function RecommendView() {
           <Card>
             <CardHeader>
               <CardTitle className="mb-0" tag="h5">
-                Career Table
+                Career List
               </CardTitle>
             </CardHeader>
             <CardBody>
@@ -213,7 +197,7 @@ function RecommendView() {
                     <th>Company</th>
                     <th>Location</th>
                     <th>Description</th>
-                    <th>Link</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -243,9 +227,16 @@ function RecommendView() {
                         <td>{job.companyLocation}</td>
                         <td title={job.shortDescription}>{job.shortDescription.slice(0, 50)}...</td>
                         <td>
-                          <a href={job.link} target="_blank" rel="noreferrer">
-                            View
-                          </a>
+                          <JobDetails job={job.description} />
+                          <Button
+                            title="Hiring post"
+                            size="sm"
+                            color="warning"
+                            className="p-1 ml-sm-1 ml-lg-2"
+                            onClick={() => window.open(job.link, "_blank")?.focus()}
+                          >
+                            <i className="fas fa-lg fa-external-link-alt"></i>
+                          </Button>
                         </td>
                       </tr>
                     ))

@@ -328,7 +328,7 @@ function Tables() {
                     <th>Company</th>
                     <th>Location</th>
                     <th>Description</th>
-                    <th>Link</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -346,9 +346,15 @@ function Tables() {
                         <td>{job.companyLocation}</td>
                         <td title={job.shortDescription}>{job.shortDescription.slice(0, 50)}...</td>
                         <td>
-                          <a href={job.link} target="_blank" rel="noreferrer">
-                            View
-                          </a>
+                          <Button
+                            title="Hiring post"
+                            size="sm"
+                            color="warning"
+                            className="p-1 ml-sm-1 ml-lg-2"
+                            onClick={() => window.open(job.link, "_blank")?.focus()}
+                          >
+                            <i className="fas fa-lg fa-external-link-alt"></i>
+                          </Button>
                         </td>
                       </tr>
                     ))
