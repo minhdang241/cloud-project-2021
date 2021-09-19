@@ -15,7 +15,7 @@ import { UserContext } from "App";
 function Tables() {
   const { username } = useContext(UserContext);
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedCareer, setSelectedCareer] = useState<Career>();
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [jobPage, setJobPage] = useState<number>(1);
@@ -289,7 +289,15 @@ function Tables() {
                 <div className="text-muted">No recommendation</div>
               ) : (
                 paths.map((path, id) => (
-                  <div role="button" key={id} className="selected-course" onClick={() => setJobs(path.jobList)}>
+                  <div
+                    role={selectedCareer?.career !== path.career ? "button" : ""}
+                    key={id}
+                    className={selectedCareer?.career === path.career ? "selecteded-course" : "selected-course"}
+                    onClick={() => {
+                      setSelectedCareer(path);
+                      setJobs(path.jobList);
+                    }}
+                  >
                     <div>{path.career}</div>
                   </div>
                 ))
