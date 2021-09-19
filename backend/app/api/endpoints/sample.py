@@ -28,6 +28,7 @@ def any_user(user: UserInfo = Depends(auth.claim(UserInfo))):
 def get_schools(
         paging_params: Params = Depends(),
         db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ) -> Page[response.SchoolDTO]:
     return crud.school.get(db_session, paging_params)
 
@@ -37,6 +38,7 @@ def get_school_courses(
         school_id: int,
         paging_params: Params = Depends(),
         db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ) -> Page[response.CourseDTO]:
     return crud.course.get_by_fields(db_session, paging_params=paging_params, school_id=school_id)
 
@@ -49,6 +51,7 @@ def get_courses(
         order: Optional[str] = None,
         paging_params: Params = Depends(),
         db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ) -> Page[response.CourseDTO]:
     order_asc = False if order and order.lower() == "desc" else True
     return crud.course.get_courses(db_session, order_asc=order_asc, paging_params=paging_params,
@@ -60,6 +63,7 @@ def get_jobs(
         career_id: Optional[int] = None,
         paging_params: Params = Depends(),
         db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ) -> Page[response.JobDTO]:
     if career_id:
         return crud.job.get(db_session, paging_params=paging_params, career_id=career_id)
@@ -69,13 +73,15 @@ def get_jobs(
 @router.get("/careers", response_model=Page[response.CareerDTO])
 def get_careers(
         paging_params: Params = Depends(),
-        db_session: Session = Depends(get_db)
+        db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ) -> Page[response.CareerDTO]:
     return crud.career.get(db_session, paging_params=paging_params)
 
 
 @router.get("/courses/levels")
 def get_course_level(
-        db_session: Session = Depends(get_db)
+        db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ):
     return crud.course.get_course_level_count(db_session)

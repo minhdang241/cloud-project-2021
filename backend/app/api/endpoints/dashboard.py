@@ -9,18 +9,19 @@ from app import crud
 from collections import Counter
 from typing import Optional
 from app.resources.strings import STOP_WORDS
+from app.api.securities.cognito_auth import auth
 
 router = APIRouter()
 
 
-@router.get("/courses/levels")
+@router.get("/courses/levels", dependencies=[Depends(auth.scope(["admin"]))])
 def get_course_level(
         db_session: Session = Depends(get_db)
 ):
     return crud.course.get_course_level_count(db_session)
 
 
-@router.get("/courses/word-cloud", response_model=response.WordFrequencies)
+@router.get("/courses/word-cloud", response_model=response.WordFrequencies, dependencies=[Depends(auth.scope(["admin"]))])
 def get_course_word_cloud(
         db_session: Session = Depends(get_db)
 ):
@@ -37,7 +38,7 @@ def get_course_word_cloud(
         words=[response.WordFreq(value=value, count=count) for (value, count) in counter])
 
 
-@router.get("/jobs/company", response_model=response.WordFrequencies)
+@router.get("/jobs/company", response_model=response.WordFrequencies, dependencies=[Depends(auth.scope(["admin"]))])
 def get_job_company_count(
         db_session: Session = Depends(get_db)
 ):
@@ -48,7 +49,7 @@ def get_job_company_count(
         words=[response.WordFreq(value=o.company_name, count=o.count) for o in new_list[:20]])
 
 
-@router.get("/jobs/word-cloud", response_model=response.WordFrequencies)
+@router.get("/jobs/word-cloud", response_model=response.WordFrequencies, dependencies=[Depends(auth.scope(["admin"]))])
 def get_job_word_cloud(
         career_id: Optional[int] = None,
         db_session: Session = Depends(get_db)
@@ -69,14 +70,14 @@ def get_job_word_cloud(
         words=[response.WordFreq(value=value, count=count) for (value, count) in counter])
 
 
-@router.get("/jobs/district")
+@router.get("/jobs/district", dependencies=[Depends(auth.scope(["admin"]))])
 def get_job_district_count(
         db_session: Session = Depends(get_db)
 ):
     return crud.job.get_job_district_count(db_session)
 
 
-@router.get("/counts", response_model=response.Counts)
+@router.get("/counts", response_model=response.Counts, dependencies=[Depends(auth.scope(["admin"]))])
 def get_counts(
         db_session: Session = Depends(get_db)
 ):

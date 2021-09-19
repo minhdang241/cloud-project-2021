@@ -5,11 +5,12 @@ from sqlalchemy.orm import Session
 from app.api.dependencies import request
 from app.resources.utils import get_db
 from app.schemas.request import request as schema_request, response
+from app.api.securities.cognito_auth import auth
 
 router = APIRouter()
 
 
-@router.get("/requests", response_model=Page[response.Request])
+@router.get("/requests", response_model=Page[response.Request], dependencies=[Depends(auth.scope(["admin"]))])
 def get_requests(
         order_field: str = None,
         paging_params: Params = Depends(),
@@ -19,7 +20,7 @@ def get_requests(
     return resp
 
 
-@router.get("/requests/{request_id}", response_model=response.Request)
+@router.get("/requests/{request_id}", response_model=response.Request, dependencies=[Depends(auth.scope(["admin"]))])
 def get_requests(
         request_id: int,
         db_session: Session = Depends(get_db),
@@ -36,7 +37,7 @@ def create_request(
     return {"message": f"Create request {'successfully' if success else 'failed'}", "created_object": obj}
 
 
-@router.put("/requests")
+@router.put("/requests", dependencies=[Depends(auth.scope(["admin"]))])
 def update_request(
         data: schema_request.Request,
         db_session: Session = Depends(get_db),

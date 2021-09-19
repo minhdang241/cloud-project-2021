@@ -8,6 +8,7 @@ from app.api.dependencies import recommendation
 from app.resources.utils import get_db
 from app.schemas.recommendation import request, response
 from typing import Optional, List
+from app.api.securities.cognito_auth import UserInfo, auth
 
 router = APIRouter()
 
@@ -17,6 +18,7 @@ def get_recommended_careers(
         course_ids: Optional[List[int]] = Query(None),
         topk: int = None,
         db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ):
     results = recommendation.get_recommended_jobs(db_session, course_ids, topk=topk)
     hash_map = defaultdict(list)
@@ -33,7 +35,8 @@ def get_recommended_careers(
 def get_mismatch_skills(
         course_ids: Optional[List[int]] = Query(None),
         career_id: int = None,
-        db_session: Session = Depends(get_db)
+        db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ):
     matching_skills, missing_skills = recommendation.get_recommended_mismatch_skills(db_session, course_ids,
                                                                                      career_id)
@@ -51,7 +54,8 @@ def get_recommended_courses(
         career_id: int,
         school_id: int,
         topk: int = None,
-        db_session: Session = Depends(get_db)
+        db_session: Session = Depends(get_db),
+        user: UserInfo = Depends(auth.claim(UserInfo))
 ):
     courses = recommendation.get_recommended_courses(db_session, career_id=career_id, school_id=school_id,
                                                      topk=topk)
