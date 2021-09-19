@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
+import Loader from "react-loader-spinner";
 // reactstrap components
 import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Spinner, Button } from "reactstrap";
 import { getRequests } from "services/requestService";
@@ -17,12 +18,11 @@ function RequestTable() {
   useEffect(() => {
     (async () => {
       try {
-        const { data: requestData } = await getRequests();
+        setLoading(true);
+        const { data: requestData } = await getRequests(page, 10);
         const temp: Request[] = keysToCamel(requestData.items as RequestDTO);
         setRequests(temp);
         setTotal(requestData.total);
-        setLoading(true);
-        console.log("object");
       } catch (error) {
         console.error(error);
       } finally {
@@ -89,7 +89,12 @@ function RequestTable() {
                     <td>{req.id}</td>
                     <td>{moment(req.createdAt).calendar()}</td>
                     <td>{getDiff(req.updatedAt, req.createdAt)}</td>
-                    <td>{req.status}</td>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <span>{req.status === "RUNNING" ? "Running" : "Finished"}</span>
+                        {req.status === "RUNNING" && <Loader type="ThreeDots" color="#38b9bb" height={40} width={40} />}
+                      </div>
+                    </td>
                   </tr>
                 ))
               )}
