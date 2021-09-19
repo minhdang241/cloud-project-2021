@@ -34,16 +34,14 @@ function RequestTable() {
     })();
   }, [page]);
 
-  const getDiff = (dateStr1?: string, dateStr2?: string): string => {
+  const getDiff = (dateStr1?: string, dateStr2?: string) => {
     if (dateStr1 == null || dateStr2 == null) {
       return "";
     }
-    const diff = new Date(dateStr1).getTime() - new Date(dateStr2).getTime();
-    const elements = moment
-      .utc(diff * 1000)
-      .format("mm:ss")
-      .split(":");
-    return `${elements[0]} minutes ${elements[1]} seconds`;
+    const diff = Math.abs(new Date(dateStr1).getTime() - new Date(dateStr2).getTime());
+    const seconds = Math.round((diff / 1000) % 60);
+    const minutes = Math.round((diff / (1000 * 60)) % 60);
+    return `${minutes} minutes ${seconds} seconds`;
   };
 
   const updateData = async () => {
