@@ -63,7 +63,14 @@ function RequestTable() {
           <CardTitle tag="h5" className="mb-0">
             Request Table
           </CardTitle>
-          <Button title="Update chart" size="sm" color="primary" className="p-1" onClick={updateData}>
+          <Button
+            title="Update chart"
+            disabled={requests[0]?.status === "RUNNING"}
+            size="sm"
+            color="primary"
+            className="p-1"
+            onClick={updateData}
+          >
             update
           </Button>
         </CardHeader>
