@@ -1,21 +1,14 @@
-import React from "react";
-
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  FormGroup,
-  Form,
-  Input,
-  Row,
-  Col,
-} from "reactstrap";
-
+import { useContext } from "react";
+import { Card, CardBody, Row, Col } from "reactstrap";
+import { UserContext } from "App";
 function User() {
+  const { username } = useContext(UserContext);
+
+  const cognito = `CognitoIdentityServiceProvider.1tlmnlptbkmipvrut7fls2fl7e.${username}.userData`;
+  const TOKEN = localStorage.getItem(cognito);
+  const userData: any = JSON.parse(TOKEN || "");
+  console.log(userData);
+
   return (
     <>
       <div className="content">
@@ -33,40 +26,16 @@ function User() {
                       className="avatar border-gray"
                       src={require("assets/img/damir-bosnjak.jpg").default}
                     />
-                    <h5 className="title">Chet Faker</h5>
+                    <h5 className="title">{userData.Username}</h5>
                   </a>
-                  <p className="description">@chetfaker</p>
                 </div>
                 <p className="description text-center">
-                  I like the way you work it <br />
-                  No diggity <br />I wanna bag it up
+                  <i className="fas fa-phone mr-3"></i>
+                  {userData.UserAttributes[3].Value}
+                  <br />
+                  <i className="fas fa-envelope mr-3"></i> {userData.UserAttributes[4].Value}
                 </p>
               </CardBody>
-              <CardFooter>
-                <hr />
-                <div className="button-container">
-                  <Row>
-                    <Col className="ml-auto" lg="3" md="6" xs="6">
-                      <h5>
-                        12 <br />
-                        <small>Files</small>
-                      </h5>
-                    </Col>
-                    <Col className="ml-auto mr-auto" lg="4" md="6" xs="6">
-                      <h5>
-                        2GB <br />
-                        <small>Used</small>
-                      </h5>
-                    </Col>
-                    <Col className="mr-auto" lg="3">
-                      <h5>
-                        24,6$ <br />
-                        <small>Spent</small>
-                      </h5>
-                    </Col>
-                  </Row>
-                </div>
-              </CardFooter>
             </Card>
           </Col>
         </Row>

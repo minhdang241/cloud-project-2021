@@ -47,3 +47,12 @@ export const keysToSnake = (o: any) => {
   }
   return o;
 };
+
+export const getHeaders = (name: string) => {
+  const cognito = `CognitoIdentityServiceProvider.1tlmnlptbkmipvrut7fls2fl7e.${name}.accessToken`;
+  return {
+    Authorization: "Bearer " + localStorage.getItem(cognito),
+    accept: "application/json",
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+};

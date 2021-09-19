@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Pie, Bar } from "react-chartjs-2";
 import { Card, CardHeader, CardBody, CardFooter, CardTitle, Row, Col, Table, Button } from "reactstrap";
 import {
@@ -18,6 +18,7 @@ import { getAllCareers } from "services/studyService";
 import Chart from "chart.js";
 import Maps from "components/graph/Map";
 import RequestTable from "components/Path/RequestTable";
+import { UserContext } from "App";
 
 const Header = ({ title, subtitle }: { title: string; subtitle?: string }) => {
   return (
@@ -27,13 +28,13 @@ const Header = ({ title, subtitle }: { title: string; subtitle?: string }) => {
   );
 };
 
-const MapCharts = () => {
+const MapCharts = ({ uName }: { uName: string }) => {
   const [geojson, setGeojson] = useState(null);
   const [maxCount, setMaxCount] = useState<number>();
 
   async function fetchDistrictJobCount() {
     return Promise.all([
-      getJobDistrict(),
+      getJobDistrict(uName),
       fetch("../district.json", {
         headers: {
           "Content-Type": "application/json",
@@ -104,11 +105,11 @@ export const LevelTable = ({ levels }: { levels: CourseLevel[] }) => {
   );
 };
 
-const CourseLevelChart = () => {
+const CourseLevelChart = ({ uName }: { uName: string }) => {
   const [levels, setLevels] = useState<CourseLevel[]>([]);
   const updateLevels = async () => {
     try {
-      const { data } = await getCourseLevel();
+      const { data } = await getCourseLevel(uName);
       const tmp: CourseLevel[] = keysToCamel(data as CourseLevelDTO);
       setLevels(tmp);
     } catch (error) {
@@ -162,14 +163,14 @@ const CourseLevelChart = () => {
   );
 };
 
-const DistributionCareers = () => {
+const DistributionCareers = ({ uName }: { uName: string }) => {
   const [graphData, setGraphData] = useState<Chart.ChartData>();
   const [careers, setCareers] = useState<CareerOption[]>([]);
 
   const updateCareerCount = async () => {
     try {
       // Load career
-      const { data: careerData } = await getAllCareers();
+      const { data: careerData } = await getAllCareers(uName);
       const tmpCareerOptions: CareerOption[] = keysToCamel(careerData.items as CareerOptionDTO);
       setCareers(tmpCareerOptions);
     } catch (error) {
@@ -250,10 +251,11 @@ const SubInfo = ({ label, value }: { label: string; value: string }) => {
 };
 
 function Dashboard() {
+  const { username } = useContext(UserContext);
   const [count, setCount] = useState<Count>();
   const getStatisticCount = async () => {
     try {
-      const { data: countData } = await getCounts();
+      const { data: countData } = await getCounts(username || "");
       const temp: Count = keysToCamel(countData);
       setCount(temp);
     } catch (error) {
@@ -280,37 +282,37 @@ function Dashboard() {
           <Header title="Career Distribution" subtitle="Number of Jobs per Career" />
           <Card className="border shadow-none" style={{ borderColor: "#d0d0d0" }}>
             <CardBody>
-              <DistributionCareers />
+              <DistributionCareers uName={username || ""} />
             </CardBody>
           </Card>
         </div>
         <Row className="my-5">
           <Col>
             <Header title="Map of Jobs in HCM city" />
-            <MapCharts />
+            <MapCharts uName={username || ""} />
           </Col>
           <Col>
             <WordCloud
               title="Jobs from Companies"
               subtitle="Describe the amount of jobs each company offers"
-              getWordCloud={getJobCompany}
+              getWordCloud={() => getJobCompany(username || "")}
             />
             <WordCloud
               title="Job Description"
               subtitle="Word Frequencies in Job Description"
-              getWordCloud={getJobWordCloud}
+              getWordCloud={() => getJobWordCloud(username || "")}
             />
           </Col>
         </Row>
         <Row>
           <Col>
-            <CourseLevelChart />
+            <CourseLevelChart uName={username || ""} />
           </Col>
           <Col>
             <WordCloud
               title="Course Description"
               subtitle="Word Frequencies in Course Description"
-              getWordCloud={getCourseWordCloud}
+              getWordCloud={() => getCourseWordCloud(username || "")}
             />
           </Col>
         </Row>

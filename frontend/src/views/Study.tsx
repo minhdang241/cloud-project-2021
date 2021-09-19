@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Pagination from "react-js-pagination";
 // reactstrap components
 import {
@@ -25,8 +25,10 @@ import { CareerOption, Course, Skill } from "utils/Types";
 import useDebounce from "utils/useDebounce";
 import CourseDetails from "components/Path/CourseDetails";
 import SortHeader, { Sort } from "components/Path/SortHeader";
+import { UserContext } from "App";
 
 function StudyPath() {
+  const { username } = useContext(UserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
@@ -51,7 +53,7 @@ function StudyPath() {
     (async () => {
       try {
         // Load career
-        const { data: careerData } = await getAllCareers();
+        const { data: careerData } = await getAllCareers(username || "");
         const tmpCareerOptions: CareerOption[] = keysToCamel(careerData.items as CareerOptionDTO);
         setCareers(tmpCareerOptions);
         setSelectedCareer(tmpCareerOptions[0]);
@@ -69,7 +71,7 @@ function StudyPath() {
     (async () => {
       try {
         setLoading("courses");
-        const { data } = await getAllCourses(page, 10, sort.by, sort.order, search);
+        const { data } = await getAllCourses(username || "", page, 10, sort.by, sort.order, search);
         const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
         setCourses(tempCourses);
         setTotal(data.total);
@@ -94,7 +96,7 @@ function StudyPath() {
       const coursesId: number[] = selectedCourses.map((c) => {
         return c.id;
       });
-      const { data } = await getSkills(coursesId, selectedCareer?.id || 0);
+      const { data } = await getSkills(username || "", coursesId, selectedCareer?.id || 0);
       const tmp: Skill = keysToCamel(data as SkillDTO);
       setSkills(tmp);
     } catch (error) {
@@ -116,7 +118,7 @@ function StudyPath() {
     setClear(!reset);
     try {
       setLoading("courses");
-      const { data } = await getAllCourses(1, 10, sort.by, sort.order, reset ? "" : search);
+      const { data } = await getAllCourses(username || "", 1, 10, sort.by, sort.order, reset ? "" : search);
       const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
       setCourses(tempCourses);
       setTotal(data.total);
