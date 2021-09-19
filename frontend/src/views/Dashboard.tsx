@@ -140,7 +140,7 @@ const CourseLevelChart = () => {
             }}
             options={{
               plugins: {
-                legend: { display: false },
+                legend: { position: "bottom" },
                 datalabels: {
                   formatter: (_: any, context: any) =>
                     (levels[context.dataIndex].count * 100) / (levels[0].count + levels[1].count) + "%",
@@ -152,9 +152,9 @@ const CourseLevelChart = () => {
           />
         </CardBody>
         <CardFooter>
-          <div className="legend text-center">
+          {/* <div className="legend text-center">
             <i className="fa fa-circle text-warning" /> Basic <i className="fa fa-circle text-danger ml-3" /> Advanced
-          </div>
+          </div> */}
           {levels[0] && <LevelTable levels={levels} />}
         </CardFooter>
       </Card>
@@ -240,8 +240,8 @@ const DistributionCareers = () => {
 
 const SubInfo = ({ label, value }: { label: string; value: string }) => {
   return (
-    <Col className="d-flex flex-column align-items-center ">
-      <div>
+    <Col className="d-flex flex-column align-items-center">
+      <div className="text-center">
         <h2 className="display-4 m-0 font-weight-normal text-primary">{value}</h2>
         <p className="ls-1 mt-1 mb-0 ">{label}</p>
       </div>
@@ -265,10 +265,10 @@ function Dashboard() {
   }, []);
   return (
     <>
-      <div className="content container">
+      <div className="content container-fluid w-xl-80 w-90">
         <Row className="border-top border-bottom">
           <Col sm="1"></Col>
-          <SubInfo label="courses from SST" value={count?.courseCount.toString() || ""} />
+          <SubInfo label="courses from RMIT" value={count?.courseCount.toString() || ""} />
           <SubInfo label={`jobs from ${count?.companyCount} companies`} value={count?.jobCount.toString() || ""} />
           <SubInfo label="career path" value={count?.careerCount.toString() || ""} />
           <Col sm="1"></Col>

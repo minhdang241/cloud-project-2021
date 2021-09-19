@@ -553,3 +553,12 @@
     }
   }
 }
+.w-90 {
+    width: 90% !important;
+  }
+
+@media screen and (min-width: 1400px) {
+  .w-xl-80 {
+    width: 75% !important;
+  }
+}

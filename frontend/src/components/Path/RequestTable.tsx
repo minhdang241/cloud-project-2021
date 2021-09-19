@@ -91,7 +91,7 @@ function RequestTable() {
                     <td>{getDiff(req.updatedAt, req.createdAt)}</td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <span>{req.status === "RUNNING" ? "Running" : "Finished"}</span>
+                        <span className="mr-3">{req.status === "RUNNING" ? "Running" : "Finished"}</span>
                         {req.status === "RUNNING" && <Loader type="ThreeDots" color="#38b9bb" height={40} width={40} />}
                       </div>
                     </td>
