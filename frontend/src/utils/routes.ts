@@ -3,42 +3,41 @@ import CareerPath from "views/Career";
 import UserPage from "views/User";
 import StudyPath from "views/Study";
 import RecommendView from "views/RecommendView";
+import { Routes } from "./Types";
 
-const routes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-bank",
-    component: Dashboard,
-    layout: "/admin",
-  },
+export const userRoutes: Routes[] = [
   {
     path: "/user-page",
     name: "User Profile",
     icon: "nc-icon nc-single-02",
     component: UserPage,
-    layout: "/admin",
   },
   {
     path: "/career",
     name: "Career Path",
     icon: "nc-icon nc-briefcase-24",
     component: CareerPath,
-    layout: "/admin",
   },
   {
     path: "/recommend",
     name: "Study Path",
     icon: "nc-icon nc-book-bookmark",
     component: RecommendView,
-    layout: "/admin",
   },
   {
     path: "/study",
     name: "Skill Analysis",
     icon: "nc-icon nc-ruler-pencil",
     component: StudyPath,
-    layout: "/admin",
   },
 ];
-export default routes;
+
+export const adminRoutes: Routes[] = [
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "nc-icon nc-bank",
+    component: Dashboard,
+  },
+  ...userRoutes,
+];

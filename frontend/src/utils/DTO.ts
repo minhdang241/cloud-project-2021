@@ -78,6 +78,9 @@ export type RequestDTO = {
   created_at: string;
   updated_at: string;
   status: string;
+  request_metadata?: {
+    totalItem: number;
+  };
 };
 
 export type CountDTO = {

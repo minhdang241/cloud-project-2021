@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Pagination from "react-js-pagination";
-import SortHeader, { Sort } from "components/Path/SortHeader";
+import { UserContext } from "App";
 // reactstrap components
 import { Card, CardHeader, CardBody, CardTitle, CardFooter, Table, Row, Col, Button, Spinner } from "reactstrap";
 import { getJobsByCareer } from "services/careerService";
@@ -11,6 +11,7 @@ import { Course, Job, CareerOption } from "utils/Types";
 import JobDetails from "components/Path/JobDetails";
 
 function RecommendView() {
+  const { username } = useContext(UserContext);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
 
@@ -30,7 +31,7 @@ function RecommendView() {
       try {
         // Load career
         setLoading("career");
-        const { data: careerData } = await getAllCareers();
+        const { data: careerData } = await getAllCareers(username || "");
         const tmpCareerOptions: CareerOption[] = keysToCamel(careerData.items as CareerOptionDTO);
         setCareers(tmpCareerOptions);
         setSelectedCareer(tmpCareerOptions[0]);
@@ -43,14 +44,13 @@ function RecommendView() {
   }, []);
 
   useEffect(() => {
-    console.log(selectedCareer);
     if (!selectedCareer || loading == "jobs") {
       return;
     }
     (async () => {
       try {
         setLoading("jobs");
-        const { data } = await getJobsByCareer(selectedCareer?.id || 0, jobPage, 10);
+        const { data } = await getJobsByCareer(username || "", selectedCareer?.id || 0, jobPage, 10);
         const tempJobs: Job[] = keysToCamel(data.items as JobDTO);
         setJobs(tempJobs);
         setTotalJob(data.total);
@@ -63,14 +63,13 @@ function RecommendView() {
   }, [jobPage, selectedCareer]);
 
   useEffect(() => {
-    console.log(selectedCareer);
     if (!selectedCareer || loadingCourse) {
       return;
     }
     (async () => {
       try {
         setLoadingCourse(true);
-        const { data } = await getCoursesByCareer(selectedCareer.id, page, 10);
+        const { data } = await getCoursesByCareer(username || "", selectedCareer.id, page, 10);
         const tmp: Course[] = keysToCamel(data.items as CourseDTO);
         setCourses(tmp);
         setTotal(data.total);

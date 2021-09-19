@@ -1,26 +1,13 @@
+import { UserContext } from "App";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Container,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input,
-} from "reactstrap";
+import { useLocation } from "react-router-dom";
+import { Navbar, NavbarBrand, Container } from "reactstrap";
 
-import routes from "utils/routes";
+import { adminRoutes, userRoutes } from "utils/routes";
+import { Routes } from "utils/Types";
 
 function Header(props: any) {
+  const { role, token } = React.useContext(UserContext);
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
@@ -38,9 +25,9 @@ function Header(props: any) {
     setDropdownOpen(!dropdownOpen);
   };
   const getBrand = () => {
-    let brandName = "Default Brand";
-    routes.map((prop, key) => {
-      if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
+    let brandName;
+    props.routes.map((prop: any, key: any) => {
+      if (window.location.href.indexOf(prop.path) !== -1) {
         brandName = prop.name;
       }
       return null;
