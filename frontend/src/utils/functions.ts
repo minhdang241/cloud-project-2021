@@ -1,3 +1,4 @@
+import { AWS_CONFIG } from "utils/constants";
 const isArray = (a: unknown) => {
   return Array.isArray(a);
 };
@@ -49,7 +50,7 @@ export const keysToSnake = (o: any) => {
 };
 
 export const getHeaders = (name: string) => {
-  const cognito = `CognitoIdentityServiceProvider.1tlmnlptbkmipvrut7fls2fl7e.${name}.accessToken`;
+  const cognito = `CognitoIdentityServiceProvider.${AWS_CONFIG.aws_user_pools_web_client_id}.${name}.accessToken`;
   return {
     Authorization: "Bearer " + localStorage.getItem(cognito),
     accept: "application/json",

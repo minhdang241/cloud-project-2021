@@ -1,10 +1,12 @@
 import { useContext } from "react";
 import { Card, CardBody, Row, Col } from "reactstrap";
 import { UserContext } from "App";
+import { AWS_CONFIG } from "utils/constants";
+
 function User() {
   const { username } = useContext(UserContext);
 
-  const cognito = `CognitoIdentityServiceProvider.1tlmnlptbkmipvrut7fls2fl7e.${username}.userData`;
+  const cognito = `CognitoIdentityServiceProvider.${AWS_CONFIG.aws_user_pools_web_client_id}.${username}.userData`;
   const TOKEN = localStorage.getItem(cognito);
   const userData: any = JSON.parse(TOKEN || "");
 
