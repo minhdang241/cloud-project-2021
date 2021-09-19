@@ -2,5 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    image: mindang241/cloud-2021-crawler:0.0
-    env_file: ./crawler/.env
+    image: mindang241/cloud-2021-crawler:0.1
+    env_file: .env.dev
+    network_mode: host
+    

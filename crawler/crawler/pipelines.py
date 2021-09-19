@@ -4,6 +4,7 @@ import psycopg2.extras
 import re
 import string
 import json
+import datetime
 
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
@@ -124,20 +125,29 @@ class JobDuplicatesPipeline:
         cur.close()
         self.conn_pool.putconn(conn)
         self.conn_pool.closeall()
+        status = "finished"
         if settings.REQUEST_ID:
-            payload = {
-                "id": settings.REQUEST_ID,
+            payload = json.dumps({
+                "request_id": settings.REQUEST_ID,
+                "updated_at": str(datetime.datetime.utcnow()),
                 "request_metadata": {
                     "total_item": len(self.ids_seen)
-                }
-            }
+                },
+                "status": "FINISHED"
+            })
             try:
-                requests.put(settings.UPDATE_REQUEST_URL, data=payload,  headers={"Authorization": f"Bearer {settings.ACCESS_TOKEN}"})
+                requests.put(settings.UPDATE_REQUEST_URL, data=payload,
+                             headers={"Authorization": f"Bearer {settings.ACCESS_TOKEN}",
+                                      "Content-Type": "application/json; charset=utf-8"
+                                      }
+                             )
                 # Send email after update DB successfully
-                send_email(settings)
             except Exception as e:
                 logging.error("Error when update database")
                 logging.error(e)
+                status = "failed"
+
+        send_email(settings, status)
 
 
 

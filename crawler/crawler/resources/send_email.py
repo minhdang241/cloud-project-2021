@@ -7,7 +7,7 @@ from crawler.settings import settings
 
 # Replace sender@example.com with your "From" address.
 # This address must be verified with Amazon SES.
-def send_email(settings):
+def send_email(settings, status: str):
     SENDER = settings.SENDER
 
     # Replace recipient@example.com with a "To" address. If your account
@@ -23,13 +23,13 @@ def send_email(settings):
     AWS_REGION = settings.AWS_REGION
 
     # The subject line for the email.
-    SUBJECT = "M3HN Recommendation Service - Cralwer has been finished running"
+    SUBJECT = f"M3HN Recommendation Service - Cralwer has been  {status}"
 
     # The email body for recipients with non-HTML email clients.
-    BODY_TEXT = """
+    BODY_TEXT = f"""
     Dear M3HN Recommendation Service Customer,
 
-    The crawling job that you create have been finished running. Please have a check.
+    The crawling job that you create have been {status}. Please have a check.
 
     Sincerely,
 
@@ -42,6 +42,7 @@ def send_email(settings):
 
     # Create a new SES resource and specify a region.
     AWS_ACCESS_KEY = settings.AWS_ACCESS_KEY
+    AWS_SECRET_KEY = settings.AWS_SECRET_KEY
     client = boto3.client('ses', region_name=AWS_REGION, aws_access_key_id=AWS_ACCESS_KEY,
                           aws_secret_access_key=AWS_SECRET_KEY)
 
