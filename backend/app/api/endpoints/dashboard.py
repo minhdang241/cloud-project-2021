@@ -74,3 +74,15 @@ def get_job_district_count(
         db_session: Session = Depends(get_db)
 ):
     return crud.job.get_job_district_count(db_session)
+
+
+@router.get("/counts", response_model=response.Counts)
+def get_counts(
+        db_session: Session = Depends(get_db)
+):
+    return response.Counts(
+        course_count=crud.course.get_course_count(db_session),
+        job_count=crud.job.get_job_count(db_session),
+        company_count=crud.job.get_company_count(db_session),
+        career_count=crud.career.get_career_count(db_session)
+    )

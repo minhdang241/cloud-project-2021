@@ -54,5 +54,8 @@ class CRUDCourse(CRUDBase[models.Course, CourseCreate, CourseUpdate]):
             query = query.order_by(asc(sorted_attr))
         return paginate(query, paging_params) if paging_params else query.first()
 
+    def get_course_count(self, db: Session):
+        return db.query(self.model).count()
+
 
 course = CRUDCourse(models.Course)

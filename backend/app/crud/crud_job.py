@@ -1,6 +1,6 @@
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func, asc
+from sqlalchemy import func, distinct
 
 from app.db.postgres import models
 from .crud_base import CRUDBase
@@ -29,6 +29,12 @@ class JobUpdate(BaseModel):
 
 
 class CRUDJob(CRUDBase[models.Job, JobCreate, JobUpdate]):
+    def get_job_count(self, db: Session):
+        return db.query(self.model).count()
+
+    def get_company_count(self, db: Session):
+        return db.query(distinct(self.model.company_name)).count()
+
     def get_job_with_career(self, db: Session):
         return db.query(self.model).options(joinedload("career")).all()
 

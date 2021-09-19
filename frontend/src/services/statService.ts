@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { keysToSnake } from "utils/functions";
-import { JobDistrictDTO, WordFrquenciesDTO } from "utils/DTO";
+import { CountDTO, JobDistrictDTO, WordFrquenciesDTO } from "utils/DTO";
 import { API } from "utils/constants";
 
 export const getCourseLevel = () => {
@@ -21,4 +21,8 @@ export const getJobCompany = (): Promise<AxiosResponse<WordFrquenciesDTO>> => {
 
 export const getJobDistrict = (): Promise<AxiosResponse<JobDistrictDTO>> => {
   return axios.get(`${API.BACKEND}/jobs/district`);
+};
+
+export const getCounts = (): Promise<AxiosResponse<CountDTO>> => {
+  return axios.get(`${API.BACKEND}/counts`);
 };

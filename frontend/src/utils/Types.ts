@@ -1,6 +1,7 @@
 import {
   CareerDTO,
   CareerOptionDTO,
+  CountDTO,
   CourseDTO,
   CourseLevelDTO,
   CourseParamsDTO,
@@ -28,3 +29,4 @@ export type WordFreq = KeysToCamelCase<WordFreqDTO>;
 export type WordFrquencies = KeysToCamelCase<WordFrquenciesDTO>;
 export type JobDistrict = KeysToCamelCase<JobDistrictDTO>;
 export type Request = KeysToCamelCase<RequestDTO>;
+export type Count = KeysToCamelCase<CountDTO>;

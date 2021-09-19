@@ -10,3 +10,10 @@ class WordFreq(BaseModel):
 
 class WordFrequencies(BaseModel):
     words: List[WordFreq]
+
+
+class Counts(BaseModel):
+    course_count: int
+    job_count: int
+    company_count: int
+    career_count: int
