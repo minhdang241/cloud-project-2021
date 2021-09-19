@@ -13,7 +13,9 @@ const JobDetails = ({ job }: { job: string }) => {
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Job Description</ModalHeader>
         <ModalBody style={{ height: "80vh" }}>
-          <p className="p-3">{job}</p>
+          <p className="p-3" style={{ overflowY: "auto", height: "100%", overflowX: "hidden" }}>
+            {job}
+          </p>
         </ModalBody>
       </Modal>
     </>

@@ -1,7 +1,5 @@
-import CourseDetails from "components/Path/CourseDetails";
 import { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
-
 // reactstrap components
 import {
   Card,
@@ -19,27 +17,31 @@ import {
   Button,
   Spinner,
 } from "reactstrap";
-import { getAllCareers, getCoursesByCareer, getSkills } from "services/studyService";
+import { getAllCareers, getSkills } from "services/studyService";
+import { getAllCourses } from "services/careerService";
 import { CareerOptionDTO, CourseDTO, SkillDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
 import { CareerOption, Course, Skill } from "utils/Types";
+import useDebounce from "utils/useDebounce";
+import CourseDetails from "components/Path/CourseDetails";
+import SortHeader, { Sort } from "components/Path/SortHeader";
 
 function StudyPath() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [clear, setClear] = useState<boolean>(false);
+  const [sort, setSort] = useState<Sort>({ by: "", order: "" });
   const [search, setSearch] = useState<string>("");
   const [isSearch, setIsSearch] = useState<boolean>(false);
+  const [clear, setClear] = useState<boolean>(false);
+  const debounceSort = useDebounce(sort);
 
   const [careers, setCareers] = useState<CareerOption[]>([]);
   const [selectedCareer, setSelectedCareer] = useState<CareerOption>();
   const [courses, setCourses] = useState<Course[]>([]);
-  // const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
   const [skills, setSkills] = useState<Skill>({ missingSkills: [], matchingSkills: [] });
-  const [recommendCourses, setRecommendCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<string>("");
   const dropdownToggle = (e: any) => {
     setDropdownOpen(!dropdownOpen);
@@ -60,15 +62,16 @@ function StudyPath() {
   }, []);
 
   useEffect(() => {
-    if (!selectedCareer) {
+    if (isSearch) {
+      setIsSearch(false);
       return;
     }
     (async () => {
       try {
         setLoading("courses");
-        const { data } = await getCoursesByCareer(selectedCareer.id, page, 10);
-        const tmp: Course[] = keysToCamel(data.items as CourseDTO);
-        setCourses(tmp);
+        const { data } = await getAllCourses(page, 10, sort.by, sort.order, search);
+        const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
+        setCourses(tempCourses);
         setTotal(data.total);
       } catch (error) {
         console.error(error);
@@ -76,14 +79,7 @@ function StudyPath() {
         setLoading("");
       }
     })();
-  }, [page, selectedCareer]);
-
-  const isSelected = (id: number): boolean => {
-    if (selectedCourses.findIndex((c) => c.id == id) > -1) {
-      return true;
-    }
-    return false;
-  };
+  }, [page, debounceSort]);
 
   const updateSelectedCourses = (course: Course, remove: boolean) => {
     if (remove) {
@@ -108,18 +104,22 @@ function StudyPath() {
     }
   };
 
+  const isSelected = (id: number): boolean => {
+    if (selectedCourses.findIndex((c) => c.id == id) > -1) {
+      return true;
+    }
+    return false;
+  };
+
   const onSearchCourse = async (reset?: boolean) => {
     setIsSearch(page !== 1);
     setClear(!reset);
     try {
       setLoading("courses");
-
-      // Fix this to prevent filtered courses override 'courses' variable
-      // filter code:
-      // courses.filter(c => search ? c.title.toLowerCase().includes(search) : true)
-
-      setCourses(courses);
-      setTotal(courses.length);
+      const { data } = await getAllCourses(1, 10, sort.by, sort.order, reset ? "" : search);
+      const tempCourses: Course[] = keysToCamel(data.items as CourseDTO);
+      setCourses(tempCourses);
+      setTotal(data.total);
     } catch (error) {
       console.error(error);
     } finally {
@@ -145,7 +145,12 @@ function StudyPath() {
       </Row>
       <Row className="align-items-center mb-2">
         <Col md="6">
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSearchCourse();
+            }}
+          >
             <div className="no-border input-group mb-0">
               <input
                 placeholder="Search course title"
@@ -153,13 +158,6 @@ function StudyPath() {
                 className="form-control"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-
-                    onSearchCourse();
-                  }
-                }}
               />
               {clear && (
                 <div className="input-group-append">
@@ -198,12 +196,7 @@ function StudyPath() {
             <CardBody>
               <Table responsive>
                 <thead className="text-primary">
-                  <tr>
-                    <th>Code</th>
-                    <th>Title</th>
-                    <th>Levels</th>
-                    <th>Action</th>
-                  </tr>
+                  <SortHeader headers={["code", "title", "level", "action"]} sort={sort} setSort={setSort} />
                 </thead>
                 <tbody>
                   {loading === "courses" ? (
@@ -323,12 +316,7 @@ function StudyPath() {
                 <div className="text-muted">No matching skills</div>
               ) : (
                 skills.matchingSkills.map((skill, id) => (
-                  <div
-                    key={id}
-                    className="selected-course"
-                    role="button"
-                    onClick={() => setRecommendCourses(skill.recommendedCourses)}
-                  >
+                  <div key={id} className="py-1">
                     <span>{skill.name}</span>
                   </div>
                 ))
@@ -348,12 +336,7 @@ function StudyPath() {
                 <div className="text-muted">No missing skills</div>
               ) : (
                 skills.missingSkills.map((skill, id) => (
-                  <div
-                    key={id}
-                    className="selected-course"
-                    role="button"
-                    onClick={() => setRecommendCourses(skill.recommendedCourses)}
-                  >
+                  <div key={id} className="py-1">
                     <span>{skill.name}</span>
                   </div>
                 ))

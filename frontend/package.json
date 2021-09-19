@@ -35,6 +35,7 @@
     "react-js-pagination": "^3.0.3",
     "react-leaflet": "^2.7.0",
     "react-leaflet-choropleth": "^2.0.1",
+    "react-loader-spinner": "^4.0.0",
     "react-notification-alert": "0.0.13",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",

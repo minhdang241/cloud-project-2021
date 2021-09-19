@@ -33,6 +33,7 @@ function RecommendView() {
         const { data: careerData } = await getAllCareers();
         const tmpCareerOptions: CareerOption[] = keysToCamel(careerData.items as CareerOptionDTO);
         setCareers(tmpCareerOptions);
+        setSelectedCareer(tmpCareerOptions[0]);
       } catch (error) {
         console.error(error);
       } finally {
@@ -49,7 +50,7 @@ function RecommendView() {
     (async () => {
       try {
         setLoading("jobs");
-        const { data } = await getJobsByCareer(selectedCareer?.id || 0, page, 10);
+        const { data } = await getJobsByCareer(selectedCareer?.id || 0, jobPage, 10);
         const tempJobs: Job[] = keysToCamel(data.items as JobDTO);
         setJobs(tempJobs);
         setTotalJob(data.total);
@@ -151,7 +152,7 @@ function RecommendView() {
                   ) : courses.length == 0 ? (
                     <tr>
                       <td colSpan={3} className="text-muted">
-                        Please select a career
+                        No courses available
                       </td>
                     </tr>
                   ) : (
