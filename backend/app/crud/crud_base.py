@@ -22,11 +22,19 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.model = model
 
-    def get(self, db: Session, paging_params: Params = None, fields: List[str] = None):
+    def get(self, db: Session, paging_params: Params = None, fields: List[str] = None, **kwargs):
         if fields:
             query = db.query(*[getattr(self.model, key) for key in fields])
         else:
             query = db.query(self.model)
+
+        for key, value in kwargs.items():
+            if hasattr(self.model, key):
+                if type(value) == list:
+                    query = query.filter(getattr(self.model, key).in_(value))
+                else:
+                    query = query.filter(getattr(self.model, key) == value)
+
         return paginate(query, paging_params) if paging_params else query.all()
 
     def get_field_by_id(self, db: Session, id: Any, paging_params: Params = None, fields: List[str] = None):

@@ -21,7 +21,7 @@ def create_request(db_session: Session):
         status=RequestStatus.RUNNING,
         created_success=True
     )
-
+   
     # start the container here to crawl data
     obj = crud.request.create(db_session, obj_in=obj_in)
     environment = {'REQUEST_ID': obj.id,
@@ -49,6 +49,10 @@ def create_request(db_session: Session):
         obj = update_request(db_session, data)
 
     return success, obj
+
+
+def get_request_by_id(db_session: Session, request_id: int):
+    return crud.request.get_by_id(db_session, request_id)
 
 
 def update_request(db_session: Session, data: dict):
