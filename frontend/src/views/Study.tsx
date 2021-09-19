@@ -316,7 +316,7 @@ function StudyPath() {
                 <div className="text-muted">No matching skills</div>
               ) : (
                 skills.matchingSkills.map((skill, id) => (
-                  <div key={id}>
+                  <div key={id} className="py-1">
                     <span>{skill.name}</span>
                   </div>
                 ))
@@ -336,7 +336,7 @@ function StudyPath() {
                 <div className="text-muted">No missing skills</div>
               ) : (
                 skills.missingSkills.map((skill, id) => (
-                  <div key={id}>
+                  <div key={id} className="py-1">
                     <span>{skill.name}</span>
                   </div>
                 ))

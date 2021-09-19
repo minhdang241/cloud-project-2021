@@ -15,7 +15,7 @@ export const getRecommendCareer = (list: number[]) => {
 };
 
 export const getJobsByCareer = (career: number, page?: number, size?: number) => {
-  const paramsDTO = keysToSnake({ page: page, size: size, career: career });
+  const paramsDTO = keysToSnake({ page: page, size: size, careerId: career });
   return axios.get(`${API.BACKEND}/jobs`, {
     params: paramsDTO,
   });
