@@ -44,7 +44,6 @@ function RecommendView() {
   }, []);
 
   useEffect(() => {
-    console.log(selectedCareer);
     if (!selectedCareer || loading == "jobs") {
       return;
     }
@@ -64,7 +63,6 @@ function RecommendView() {
   }, [jobPage, selectedCareer]);
 
   useEffect(() => {
-    console.log(selectedCareer);
     if (!selectedCareer || loadingCourse) {
       return;
     }

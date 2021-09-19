@@ -21,7 +21,6 @@ export default function SortHeader({ headers, sort, setSort }: Props) {
     let order = "asc";
     let by = head;
     if (sort.by === head) {
-      console.log(sort.order);
       order = sort.order === "asc" ? "desc" : "";
       by = sort.order === "asc" ? by : "";
     }

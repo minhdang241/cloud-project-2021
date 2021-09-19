@@ -7,7 +7,6 @@ function User() {
   const cognito = `CognitoIdentityServiceProvider.1tlmnlptbkmipvrut7fls2fl7e.${username}.userData`;
   const TOKEN = localStorage.getItem(cognito);
   const userData: any = JSON.parse(TOKEN || "");
-  console.log(userData);
 
   return (
     <>

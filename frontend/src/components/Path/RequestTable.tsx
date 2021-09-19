@@ -109,7 +109,6 @@ function RequestTable() {
                         {req.status === "RUNNING" && <Loader type="ThreeDots" color="#38b9bb" height={40} width={40} />}
                       </div>
                     </td>
-                    {console.log(req.requestMetadata)}
                     <td>{req.requestMetadata?.totalItem}</td>
                   </tr>
                 ))
