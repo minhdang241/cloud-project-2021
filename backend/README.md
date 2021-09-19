@@ -46,7 +46,7 @@ Endpoint documentation is available in `/docs` or `/redoc` (eg. `https://backend
 
 Auth scheme: HTTPBearer
 
-Token is verified using KeycloakOpenID.
+Token is verified using Amazon Cognito.
 
 There are two roles: User and Admin
 
