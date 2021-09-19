@@ -79,3 +79,10 @@ export type RequestDTO = {
   updated_at: string;
   status: string;
 };
+
+export type CountDTO = {
+  course_count: number;
+  job_count: number;
+  company_count: number;
+  career_count: number;
+};

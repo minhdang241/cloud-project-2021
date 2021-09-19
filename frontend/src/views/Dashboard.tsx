@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Pie, Bar } from "react-chartjs-2";
 import { Card, CardHeader, CardBody, CardFooter, CardTitle, Row, Col, Table, Button } from "reactstrap";
 import {
+  getCounts,
   getCourseLevel,
   getCourseWordCloud,
   getJobCompany,
@@ -11,7 +12,7 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { CareerOptionDTO, CourseLevelDTO, JobDistrictDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
-import { CareerOption, CourseLevel, JobDistrict } from "utils/Types";
+import { CareerOption, Count, CourseLevel, JobDistrict } from "utils/Types";
 import WordCloud from "components/graph/WordCloud";
 import { getAllCareers } from "services/studyService";
 import Chart from "chart.js";
@@ -249,14 +250,27 @@ const SubInfo = ({ label, value }: { label: string; value: string }) => {
 };
 
 function Dashboard() {
+  const [count, setCount] = useState<Count>();
+  const getStatisticCount = async () => {
+    try {
+      const { data: countData } = await getCounts();
+      const temp: Count = keysToCamel(countData);
+      setCount(temp);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getStatisticCount();
+  }, []);
   return (
     <>
       <div className="content container">
         <Row className="border-top border-bottom">
           <Col sm="1"></Col>
-          <SubInfo label="courses from SST" value={"123"} />
-          <SubInfo label="jobs from 45 companies" value={"389"} />
-          <SubInfo label="career path" value={"12"} />
+          <SubInfo label="courses from SST" value={count?.courseCount.toString() || ""} />
+          <SubInfo label={`jobs from ${count?.companyCount} companies`} value={count?.jobCount.toString() || ""} />
+          <SubInfo label="career path" value={count?.careerCount.toString() || ""} />
           <Col sm="1"></Col>
         </Row>
         <Row className="mt-5">
