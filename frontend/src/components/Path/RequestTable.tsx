@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Pagination from "react-js-pagination";
 import Loader from "react-loader-spinner";
 // reactstrap components
@@ -8,8 +8,11 @@ import { RequestDTO } from "utils/DTO";
 import { keysToCamel } from "utils/functions";
 import { Request } from "utils/Types";
 import moment from "moment";
+import { UserContext } from "App";
+import { crawl } from "services/statService";
 
 function RequestTable() {
+  const { username } = useContext(UserContext);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [requests, setRequests] = useState<Request[]>([]);
@@ -19,7 +22,7 @@ function RequestTable() {
     (async () => {
       try {
         setLoading(true);
-        const { data: requestData } = await getRequests(page, 10);
+        const { data: requestData } = await getRequests(username || "", page, 10);
         const temp: Request[] = keysToCamel(requestData.items as RequestDTO);
         setRequests(temp);
         setTotal(requestData.total);
@@ -43,6 +46,16 @@ function RequestTable() {
     return `${elements[0]} minutes ${elements[1]} seconds`;
   };
 
+  const updateData = async () => {
+    try {
+      const res = await crawl(username || "");
+      const temp: Request = keysToCamel(res.data.created_object as RequestDTO);
+      setRequests([temp, ...requests]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Col sm="12">
       <Card>
@@ -50,7 +63,7 @@ function RequestTable() {
           <CardTitle tag="h5" className="mb-0">
             Request Table
           </CardTitle>
-          <Button title="Update chart" size="sm" color="primary" className="p-1">
+          <Button title="Update chart" size="sm" color="primary" className="p-1" onClick={updateData}>
             update
           </Button>
         </CardHeader>
@@ -62,6 +75,7 @@ function RequestTable() {
                 <th>Created at</th>
                 <th>Elapse time</th>
                 <th>Status</th>
+                <th>Total Item</th>
               </tr>
             </thead>
             <tbody>
@@ -95,6 +109,8 @@ function RequestTable() {
                         {req.status === "RUNNING" && <Loader type="ThreeDots" color="#38b9bb" height={40} width={40} />}
                       </div>
                     </td>
+                    {console.log(req.requestMetadata)}
+                    <td>{req.requestMetadata?.totalItem}</td>
                   </tr>
                 ))
               )}
