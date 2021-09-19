@@ -58,9 +58,16 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const allRoutes: Routes[] = profile?.role == "admin" ? adminRoutes : userRoutes;
+    if (profile?.role == undefined) {
+      return;
+    }
+    const allRoutes: Routes[] = profile.role == "admin" ? adminRoutes : userRoutes;
     setRoutes(allRoutes);
   }, [profile]);
+
+  if (routes.length == 0) {
+    return <div></div>;
+  }
 
   return (
     <div>
