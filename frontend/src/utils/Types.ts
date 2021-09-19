@@ -14,6 +14,12 @@ import {
   WordFrquenciesDTO,
 } from "./DTO";
 
+export type Routes = {
+  path: string;
+  name: string;
+  icon?: string;
+  component: (props: any) => JSX.Element;
+};
 export interface Dictionary<T> {
   [Key: string]: T;
 }

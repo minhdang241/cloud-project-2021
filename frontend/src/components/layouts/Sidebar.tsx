@@ -27,7 +27,7 @@ function Sidebar(props: any) {
           {props.routes.map((prop: any, key: any) => {
             return (
               <li className={activeRoute(prop.path) + (prop.pro ? " active-pro" : "")} key={key}>
-                <NavLink to={prop.layout + prop.path} className="nav-link" activeClassName="active">
+                <NavLink to={prop.path} className="nav-link" activeClassName="active">
                   <i className={prop.icon} />
                   <p>{prop.name}</p>
                 </NavLink>
